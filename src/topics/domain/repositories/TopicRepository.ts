@@ -5,5 +5,5 @@ export interface TopicRepository {
     create(topic: Topic): Promise<TopicI>;
     findAll(): Promise<Array<TopicI>>;
     findOne(id: number): Promise<TopicI>;
-    findByUnit(id: number): Promise<Array<TopicI>>;
+    findByUnit(id: number): Promise<Array<Partial<TopicI>>>;
 }
