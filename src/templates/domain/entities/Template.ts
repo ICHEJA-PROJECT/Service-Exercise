@@ -1,13 +1,17 @@
 export class Template {
     title: string;
-    subtitle: string;
-    content: string;
+    instructions: string;
+    suggest_time: string;
+    attributes: object;
     topic_id: number;
+    layout: number;
 
-    constructor(title: string, subtitle: string, content: string, topic_id: number) {
+    constructor(title: string, instructions: string, attributes: object, topic_id: number, suggest_time: string, layout: number) {
         this.title = title;
-        this.subtitle = subtitle;
-        this.content = content;
+        this.instructions = instructions;
+        this.suggest_time = suggest_time;
+        this.attributes = attributes;
         this.topic_id = topic_id;
+        this.layout = layout;
     }
 }
