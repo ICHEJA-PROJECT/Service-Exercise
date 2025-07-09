@@ -1,11 +1,9 @@
 export class Exercise {
-    instructions: string;
-    paths_images: string[];
-    context: Object;
+    context: object;
+    template_id: number;
 
-    constructor(instructions: string, path_images: Array<string>, context: Object) {
-        this.instructions = instructions;
-        this.paths_images = path_images;
+    constructor(context: object, template_id: number) {
         this.context = context;
+        this.template_id = template_id;
     }
 }
