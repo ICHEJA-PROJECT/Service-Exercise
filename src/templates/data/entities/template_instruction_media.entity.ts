@@ -5,14 +5,14 @@ import { Column, Entity, JoinColumn, ManyToOne } from "typeorm";
 import { TemplateEntity } from "./template.entity";
 import { TypeInstructionMediaEntity } from "./type_instruction_media.entity";
 
-@Entity("Reactivo_Instruccion_Media")
+@Entity("reactivo_instruccion_media")
 export class TemplateInstructionMediaEntity implements TemplateInstructionMediaI {
     @ManyToOne(() => TemplateEntity, template => template.instructionMedias)
-    @JoinColumn({ name: "ID_Reactivo"})
-    template_id: TemplateI;
+    @JoinColumn({ name: "id_reactivo"})
+    template: TemplateI;
     @ManyToOne(() => TypeInstructionMediaEntity, typeInstructionMedia => typeInstructionMedia.instructionsMedias)
-    @JoinColumn({name: "ID_Tipo_Media"})
-    type_media_id: TypeInstructionMediaI;
-    @Column({name: "Ruta_Media", type: "varchar", length: 64, nullable: false})
-    path_media: string;
+    @JoinColumn({name: "id_tipo_media"})
+    typeMedia: TypeInstructionMediaI;
+    @Column({name: "ruta_media", type: "varchar", length: 64, nullable: false})
+    pathMedia: string;
 }

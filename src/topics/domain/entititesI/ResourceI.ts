@@ -3,7 +3,7 @@ import { TopicI } from "./TopicI";
 
 export class ResourceI {
     id: number;
-    content: Object;
+    content: object;
     topics: TopicI[];
     layout: LayoutI;
 }

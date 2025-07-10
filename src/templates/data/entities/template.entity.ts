@@ -8,27 +8,31 @@ import { Column, Entity, JoinColumn, ManyToOne, OneToMany, PrimaryGeneratedColum
 import { TemplateInstructionMediaEntity } from "./template_instruction_media.entity";
 import { TemplateInstructionMediaI } from "src/templates/domain/entitiesI/TemplateInstructionMediaI";
 import { ExerciseEntity } from "src/exercises/data/entities/exercise.entity";
+import { TemplateSkillI } from "src/templates/domain/entitiesI/TemplateSkillI";
+import { TemplateSkillEntity } from "./template_skill.entity";
 
-@Entity('Reactivo')
+@Entity('reactivo')
 export class TemplateEntity implements TemplateI {
     @PrimaryGeneratedColumn('increment')
     id: number;
-    @Column({ name: "Titulo", type: "varchar", length: 64, nullable: false })
+    @Column({ name: "titulo", type: "varchar", length: 64, nullable: false })
     title: string;
-    @Column({ name: "Subtitulo", type: "text", nullable: false })
+    @Column({ name: "instrucciones", type: "text", nullable: false })
     instructions: string;
-    @Column({ name: "Tiempo_Sugerido", type: "varchar", nullable: false})
-    suggest_time: string;
-    @Column({ name: "Atributos", type: "json" , nullable: false})
+    @Column({ name: "tiempo_sugerido", type: "varchar", nullable: false})
+    suggestTime: string;
+    @Column({ name: "atributos", type: "json" , nullable: false})
     attributes: object;
     @ManyToOne(() => TopicEntity, topic => topic.templates)
-    @JoinColumn({ name: "ID_Tema"})
-    topic_id: TopicI;
+    @JoinColumn({ name: "id_tema"})
+    topic: TopicI;
     @ManyToOne(() => LayoutEntity, layout => layout.templates)
-    @JoinColumn({ name: "ID_Layout"})
+    @JoinColumn({ name: "id_layout"})
     layout: LayoutI;
     @OneToMany(() => ExerciseEntity, exercise => exercise.template_id)
     exercises: ExerciseI[];
-    @OneToMany(() => TemplateInstructionMediaEntity, templateInstrucionMedia => templateInstrucionMedia.template_id)
+    @OneToMany(() => TemplateInstructionMediaEntity, templateInstrucionMedia => templateInstrucionMedia.template)
     instructionMedias: TemplateInstructionMediaI[];
+    @OneToMany(() => TemplateSkillEntity, templateSkill => templateSkill.template)
+    skills: TemplateSkillI[];
 }

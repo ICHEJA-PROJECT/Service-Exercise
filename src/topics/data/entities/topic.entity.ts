@@ -6,29 +6,34 @@ import { UnitEntity } from "./unit.entity";
 import { ResourceEntity } from "./resource.entity";
 import { TemplateI } from "src/templates/domain/entitiesI/TemplateI";
 import { TemplateEntity } from "src/templates/data/entities/template.entity";
+import { TopicSequenceEntity } from "./topic_sequence.entity";
 
-@Entity('Tema')
+@Entity('tema')
 export class TopicEntity implements TopicI {
     @PrimaryGeneratedColumn('increment')
     id: number;
-    @Column({ name: "Nombre", type: "varchar", length: 64, nullable: false})
+    @Column({ name: "nombre", type: "varchar", length: 64, nullable: false})
     name: string;
     @ManyToOne(
         () => UnitEntity,
         unit => unit.topics
     )
-    @JoinColumn({ name: "ID_unidad" })
-    unit_id: UnitI;
+    @JoinColumn({ name: "id_unidad" })
+    unit: UnitI;
     @ManyToMany(
         () => ResourceEntity, 
         resource => resource.topics
     )
     @JoinTable({
-        name: "Tema_Recursos",
-        joinColumn: { name: 'ID_Tema'},
-        inverseJoinColumn: { name: 'ID_Recurso'}
+        name: "tema_recursos",
+        joinColumn: { name: 'id_tema'},
+        inverseJoinColumn: { name: 'id_recurso'}
     })
     resources: ResourceI[];
     @OneToMany(() => TemplateEntity, template => template.topic_id)
     templates: TemplateI[];
+    @OneToMany(() => TopicSequenceEntity, topicSequence => topicSequence.currentTopic)
+    nextTopics: TopicI[];
+    @OneToMany(() => TopicSequenceEntity, topicSequence => topicSequence.nextTopic)
+    previousTopics: TopicI[];
 }

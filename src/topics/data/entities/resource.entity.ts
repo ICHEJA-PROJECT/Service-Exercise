@@ -5,15 +5,15 @@ import { TopicEntity } from "./topic.entity";
 import { LayoutI } from "src/layouts/domain/entitiesI/LayoutI";
 import { LayoutEntity } from "src/layouts/data/entities/layout.entity";
 
-@Entity('Recurso')
+@Entity('recurso')
 export class ResourceEntity implements ResourceI {
     @PrimaryGeneratedColumn('increment')
     id: number;
-    @Column({ name: "Contenido", nullable: false})
-    content: Object;
+    @Column({ name: "contenido", nullable: false})
+    content: object;
     @ManyToMany(() => TopicEntity, topic => topic.resources)
     topics: TopicI[];
     @ManyToOne(() => LayoutEntity, layout => layout.resources)
-    @JoinColumn({name: "ID_Layout"})
+    @JoinColumn({name: "id_Layout"})
     layout: LayoutI;
 }

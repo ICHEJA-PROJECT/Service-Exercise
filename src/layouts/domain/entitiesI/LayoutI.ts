@@ -5,7 +5,7 @@ import { TemplateI } from "src/templates/domain/entitiesI/TemplateI";
 export interface LayoutI {
     id: number;
     name: string;
-    type_layout_id: TypeLayoutI;
+    typeLayout: TypeLayoutI;
     resources: ResourceI[];
     templates: TemplateI[];
 }

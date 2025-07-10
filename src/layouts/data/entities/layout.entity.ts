@@ -15,7 +15,7 @@ export class LayoutEntity implements LayoutI {
     name: string;
     @ManyToOne(() => TypeLayoutEntity, typelayout => typelayout.layouts)
     @JoinColumn({name: "ID_Tipo_Layout"})
-    type_layout_id: TypeLayoutI;
+    typeLayout: TypeLayoutI;
     @OneToMany(() => ResourceEntity, resource => resource.layout)
     resources: ResourceI[];
     @OneToMany(() => TemplateEntity, template => template.layout)

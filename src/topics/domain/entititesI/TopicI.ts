@@ -5,7 +5,9 @@ import { UnitI } from "./UnitI";
 export interface TopicI {
     id: number;
     name: string;
-    unit_id: UnitI;
+    unit: UnitI;
     resources: ResourceI[];
     templates: TemplateI[];
+    nextTopics: TopicI[];
+    previousTopics: TopicI[];
 }
