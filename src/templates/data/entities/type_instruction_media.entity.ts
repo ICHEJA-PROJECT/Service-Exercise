@@ -5,7 +5,7 @@ import { TemplateInstructionMediaEntity } from "./template_instruction_media.ent
 
 @Entity("tipo_instruccion_media")
 export class TypeInstructionMediaEntity implements TypeInstructionMediaI{
-    @PrimaryGeneratedColumn('increment')
+    @PrimaryGeneratedColumn('increment', {name: "id_tipo_media"})
     id: number;
     @Column({ name: "nombre", type: "varchar", length: 32, nullable: false})
     name: string;

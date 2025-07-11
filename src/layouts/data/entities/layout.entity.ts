@@ -9,7 +9,7 @@ import { TemplateEntity } from "src/templates/data/entities/template.entity";
 
 @Entity('Layout')
 export class LayoutEntity implements LayoutI {
-    @PrimaryGeneratedColumn('increment')
+    @PrimaryGeneratedColumn('increment', {name: "id_layout"})
     id: number;
     @Column({name: "Nombre", type: "varchar", length: 64, nullable: false})
     name: string;

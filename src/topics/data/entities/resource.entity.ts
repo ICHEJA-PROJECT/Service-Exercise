@@ -7,9 +7,11 @@ import { LayoutEntity } from "src/layouts/data/entities/layout.entity";
 
 @Entity('recurso')
 export class ResourceEntity implements ResourceI {
-    @PrimaryGeneratedColumn('increment')
+    @PrimaryGeneratedColumn('increment', { name: "id_recurso"})
     id: number;
-    @Column({ name: "contenido", nullable: false})
+    @Column({name: "titulo", type: "varchar", length: 64, nullable: false})
+    title: string;
+    @Column({ name: "contenido", type: "jsonb", nullable: false})
     content: object;
     @ManyToMany(() => TopicEntity, topic => topic.resources)
     topics: TopicI[];

@@ -5,7 +5,7 @@ import { TemplateSkillEntity } from "./template_skill.entity";
 
 @Entity('habilidad')
 export class SkillEntity implements SkillI {
-    @PrimaryGeneratedColumn('increment')
+    @PrimaryGeneratedColumn('increment', { name: "id_habilidad"})
     id: number;
     @Column({name: "nombre", type: "varchar", length: 64, nullable: false })
     name: string;

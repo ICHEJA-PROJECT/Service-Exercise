@@ -1,14 +1,15 @@
 import { ExerciseI } from "src/exercises/domain/entitiesI/ExerciseI";
 import { TemplateEntity } from "src/templates/data/entities/template.entity";
+import { TemplateI } from "src/templates/domain/entitiesI/TemplateI";
 import { Column, Entity, JoinColumn, ManyToMany, ManyToOne, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 
-@Entity("Ejercicio")
+@Entity("ejercicio")
 export class ExerciseEntity implements ExerciseI {
-    @PrimaryGeneratedColumn('increment')
+    @PrimaryGeneratedColumn('increment', {name: "id_ejercicio"})
     id: number;
-    @Column({ name: "Contexto", nullable: false})
-    context: any;
+    @Column({ name: "contexto", nullable: false, type: "json"})
+    context: object;
     @ManyToOne(() => TemplateEntity, template => template.exercises)
-    @JoinColumn({ name: "ID_Reactivo"})
-    template_id: number;
+    @JoinColumn({ name: "id_reactivo"})
+    template: TemplateI;
 }

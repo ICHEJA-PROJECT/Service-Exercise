@@ -13,7 +13,7 @@ import { TemplateSkillEntity } from "./template_skill.entity";
 
 @Entity('reactivo')
 export class TemplateEntity implements TemplateI {
-    @PrimaryGeneratedColumn('increment')
+    @PrimaryGeneratedColumn('increment', {name: "id_reactivo"})
     id: number;
     @Column({ name: "titulo", type: "varchar", length: 64, nullable: false })
     title: string;
@@ -29,7 +29,7 @@ export class TemplateEntity implements TemplateI {
     @ManyToOne(() => LayoutEntity, layout => layout.templates)
     @JoinColumn({ name: "id_layout"})
     layout: LayoutI;
-    @OneToMany(() => ExerciseEntity, exercise => exercise.template_id)
+    @OneToMany(() => ExerciseEntity, exercise => exercise.template)
     exercises: ExerciseI[];
     @OneToMany(() => TemplateInstructionMediaEntity, templateInstrucionMedia => templateInstrucionMedia.template)
     instructionMedias: TemplateInstructionMediaI[];

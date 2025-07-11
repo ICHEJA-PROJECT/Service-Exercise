@@ -5,7 +5,7 @@ import { LayoutEntity } from "./layout.entity";
 
 @Entity('tipo_layouts')
 export class TypeLayoutEntity implements TypeLayoutI {
-    @PrimaryGeneratedColumn('increment')
+    @PrimaryGeneratedColumn('increment', { name: "id_tipo_layout"})
     id: number;
     @Column({name: "nombre", type: "varchar", length: 64, nullable: false})
     name: string;

@@ -10,7 +10,7 @@ import { TopicSequenceEntity } from "./topic_sequence.entity";
 
 @Entity('tema')
 export class TopicEntity implements TopicI {
-    @PrimaryGeneratedColumn('increment')
+    @PrimaryGeneratedColumn('increment', { name: "id_tema"})
     id: number;
     @Column({ name: "nombre", type: "varchar", length: 64, nullable: false})
     name: string;
@@ -30,7 +30,7 @@ export class TopicEntity implements TopicI {
         inverseJoinColumn: { name: 'id_recurso'}
     })
     resources: ResourceI[];
-    @OneToMany(() => TemplateEntity, template => template.topic_id)
+    @OneToMany(() => TemplateEntity, template => template.topic)
     templates: TemplateI[];
     @OneToMany(() => TopicSequenceEntity, topicSequence => topicSequence.currentTopic)
     nextTopics: TopicI[];
