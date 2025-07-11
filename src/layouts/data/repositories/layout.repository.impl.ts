@@ -1,11 +1,12 @@
-import { Inject, InternalServerErrorException } from "@nestjs/common";
-import { LayoutRepository } from "src/layouts/domain/repositories/layout.repository";
+import { Inject, Injectable, InternalServerErrorException } from "@nestjs/common";
+import { LayoutRepository } from "src/layouts/domain/repositories/LayoutRepository";
 import { LayoutEntity } from "../entities/layout.entity";
 import { In, Repository } from "typeorm";
 import { LayoutI } from "src/layouts/domain/entitiesI/LayoutI";
 import { CreateLayoutDto } from "../dtos/create-layout.dto";
 import { TypeLayoutEntity } from "../entities/type_layout.entity";
 
+@Injectable()
 export class LayoutRepositoryImpl implements LayoutRepository {
     constructor(
         @Inject(LayoutEntity) private readonly layoutRepository: Repository<LayoutEntity>, 
@@ -20,8 +21,9 @@ export class LayoutRepositoryImpl implements LayoutRepository {
             }
             const layoutSaved = this.layoutRepository.create({
                 name: createLayout.name,
-                type_layout_id: typeLayout
+                typeLayout: typeLayout
             });
+
             return await this.layoutRepository.save(layoutSaved);
         } catch (error) {
             throw new InternalServerErrorException(error);
