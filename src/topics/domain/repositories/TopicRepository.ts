@@ -1,9 +1,8 @@
-import { Topic } from "../entities/Topic";
+import { CreateTopicDto } from "src/topics/data/dtos/create-topic.dto";
 import { TopicI } from "../entititesI/TopicI";
 
 export interface TopicRepository {
-    create(topic: Topic): Promise<TopicI>;
-    findAll(): Promise<Array<Partial<TopicI>>>;
+    create(createTopic: CreateTopicDto): Promise<TopicI>;
     findOne(id: number): Promise<TopicI>;
-    findByUnit(id: number): Promise<Array<Partial<TopicI>>>;
+    findByIds(ids: number[]): Promise<TopicI[]>;
 }
