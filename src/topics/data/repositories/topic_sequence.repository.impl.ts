@@ -4,10 +4,11 @@ import { TopicSequenceEntity } from "../entities/topic_sequence.entity";
 import { Repository } from "typeorm";
 import { TopicSequenceI } from "src/topics/domain/entititesI/TopicSequenceI";
 import { CreateTopicSequenceDto } from "../dtos/create-topic-sequence.dto";
+import { InjectRepository } from "@nestjs/typeorm";
 
 @Injectable()
 export class TopicSequenceRepositoryImpl implements TopicSequenceRepository {
-    constructor(@Inject(TopicSequenceEntity) private readonly topicSequenceRepository: Repository<TopicSequenceEntity>){}
+    constructor(@InjectRepository(TopicSequenceEntity) private readonly topicSequenceRepository: Repository<TopicSequenceEntity>){}
 
     async create(createTopicSequenceDto: CreateTopicSequenceDto): Promise<TopicSequenceI> {
         try {

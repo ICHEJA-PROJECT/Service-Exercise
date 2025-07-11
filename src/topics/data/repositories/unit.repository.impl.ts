@@ -4,10 +4,11 @@ import { UnitRepository } from "src/topics/domain/repositories/UnitRepository";
 import { UnitEntity } from "../entities/unit.entity";
 import { Repository } from "typeorm";
 import { CreateUnitDto } from "../dtos/create-unit.dto";
+import { InjectRepository } from "@nestjs/typeorm";
 
 @Injectable()
 export class UnitRepositoryImpl implements UnitRepository {
-    constructor(@Inject(UnitEntity) private readonly unitRepository: Repository<UnitEntity>) {}
+    constructor(@InjectRepository(UnitEntity) private readonly unitRepository: Repository<UnitEntity>) {}
 
     async create(createUnit: CreateUnitDto): Promise<UnitI> {
         try {

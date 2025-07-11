@@ -1,16 +1,17 @@
 import { ResourceI } from "src/topics/domain/entititesI/ResourceI";
 import { ResourceRepository } from "src/topics/domain/repositories/ResourceRepository";
 import { ResourceEntity } from "../entities/resource.entity";
-import { Inject, Injectable, InternalServerErrorException, NotFoundException } from "@nestjs/common";
+import { Injectable, InternalServerErrorException, NotFoundException } from "@nestjs/common";
 import { In, Repository } from "typeorm";
 import { CreateResourceDto } from "../dtos/create-resource.dto";
 import { LayoutEntity } from "src/layouts/data/entities/layout.entity";
+import { InjectRepository } from "@nestjs/typeorm";
 
 @Injectable()
 export class ResourceRepositoryImpl implements ResourceRepository {
     constructor(
-        @Inject(ResourceEntity) private readonly resourceRepository: Repository<ResourceEntity>,
-        @Inject(LayoutEntity) private readonly layoutRepository: Repository<LayoutEntity>
+        @InjectRepository(ResourceEntity) private readonly resourceRepository: Repository<ResourceEntity>,
+        @InjectRepository(LayoutEntity) private readonly layoutRepository: Repository<LayoutEntity>
     ) {}
 
     async create(createResource: CreateResourceDto): Promise<ResourceI> {

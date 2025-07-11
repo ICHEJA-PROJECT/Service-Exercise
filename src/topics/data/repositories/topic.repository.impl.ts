@@ -1,17 +1,17 @@
-import { Inject, Injectable, InternalServerErrorException, NotFoundException } from "@nestjs/common";
-import { Topic } from "src/topics/domain/entities/Topic";
+import { Injectable, InternalServerErrorException, NotFoundException } from "@nestjs/common";
 import { TopicI } from "src/topics/domain/entititesI/TopicI";
 import { TopicRepository } from "src/topics/domain/repositories/TopicRepository";
 import { UnitEntity } from "../entities/unit.entity";
 import { In, Repository } from "typeorm";
 import { TopicEntity } from "../entities/topic.entity";
 import { CreateTopicDto } from "../dtos/create-topic.dto";
+import { InjectRepository } from "@nestjs/typeorm";
 
 @Injectable()
 export class TopicRepositoryImpl implements TopicRepository {
     constructor(
-        @Inject(TopicEntity) private readonly topicRepository: Repository<TopicEntity>, 
-        @Inject(UnitEntity) private readonly unitRepository: Repository<UnitEntity>
+        @InjectRepository(TopicEntity) private readonly topicRepository: Repository<TopicEntity>, 
+        @InjectRepository(UnitEntity) private readonly unitRepository: Repository<UnitEntity>
     ) {}
 
     async create(createTopic: CreateTopicDto): Promise<TopicI> {
