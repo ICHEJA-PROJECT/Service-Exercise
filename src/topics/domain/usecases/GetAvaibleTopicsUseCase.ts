@@ -1,8 +1,9 @@
-import { InternalServerErrorException } from "@nestjs/common";
+import { Inject, InternalServerErrorException } from "@nestjs/common";
 import { TopicSequenceRepository } from "../repositories/TopicSequenceRepository";
+import { TopicSequenceRepositoryImpl } from "src/topics/data/repositories/topic_sequence.repository.impl";
 
 export class GetAvaibleTopicsUseCase {
-    constructor(private readonly topicSequenceRepository: TopicSequenceRepository) {}
+    constructor(@Inject(TopicSequenceRepositoryImpl) private readonly topicSequenceRepository: TopicSequenceRepository) {}
 
     async run(completedTopics: number[]): Promise<number[]> {
         try {
