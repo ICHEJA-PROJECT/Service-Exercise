@@ -5,4 +5,5 @@ export interface TemplateSkillI {
     template: TemplateI;
     skill: SkillI;
     porcentage: number;
+    flag: boolean;
 }
