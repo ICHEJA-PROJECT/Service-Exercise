@@ -1,16 +1,17 @@
-import { Inject, Injectable, InternalServerErrorException } from "@nestjs/common";
+import { Injectable, InternalServerErrorException } from "@nestjs/common";
 import { LayoutRepository } from "src/layouts/domain/repositories/LayoutRepository";
 import { LayoutEntity } from "../entities/layout.entity";
-import { In, Repository } from "typeorm";
+import { Repository } from "typeorm";
 import { LayoutI } from "src/layouts/domain/entitiesI/LayoutI";
 import { CreateLayoutDto } from "../dtos/create-layout.dto";
 import { TypeLayoutEntity } from "../entities/type_layout.entity";
+import { InjectRepository } from "@nestjs/typeorm";
 
 @Injectable()
 export class LayoutRepositoryImpl implements LayoutRepository {
     constructor(
-        @Inject(LayoutEntity) private readonly layoutRepository: Repository<LayoutEntity>, 
-        @Inject(TypeLayoutEntity) private readonly typeLayoutRepository: Repository<TypeLayoutEntity>
+        @InjectRepository(LayoutEntity) private readonly layoutRepository: Repository<LayoutEntity>, 
+        @InjectRepository(TypeLayoutEntity) private readonly typeLayoutRepository: Repository<TypeLayoutEntity>
     ){}
     
     async create(createLayout: CreateLayoutDto): Promise<LayoutI> {

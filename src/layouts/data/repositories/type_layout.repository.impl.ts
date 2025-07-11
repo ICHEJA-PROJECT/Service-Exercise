@@ -4,10 +4,11 @@ import { TypeLayoutRepository } from "src/layouts/domain/repositories/TypeLayout
 import { Repository } from "typeorm";
 import { TypeLayoutEntity } from "../entities/type_layout.entity";
 import { CreateTypeLayoutDto } from "../dtos/create-type-layout.dto";
+import { InjectRepository } from "@nestjs/typeorm";
 
 @Injectable()
 export class TypeLayoutRepositoryImpl implements TypeLayoutRepository {
-    constructor(@Inject(TypeLayoutEntity) private readonly typeLayoutRepository: Repository<TypeLayoutEntity>) {}
+    constructor(@InjectRepository(TypeLayoutEntity) private readonly typeLayoutRepository: Repository<TypeLayoutEntity>) {}
 
     async create(createTypeLayoutDto: CreateTypeLayoutDto): Promise<TypeLayoutI> {
         try {
