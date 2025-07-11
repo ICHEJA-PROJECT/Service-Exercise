@@ -5,10 +5,14 @@ import { Inject, Injectable, InternalServerErrorException, NotFoundException } f
 import { ExerciseEntity } from "../entities/exercise.entity";
 import { Repository } from "typeorm";
 import { TemplateEntity } from "src/templates/data/entities/template.entity";
+import { InjectRepository } from "@nestjs/typeorm";
 
 @Injectable()
 export class ExerciseRepositoryImpl implements ExerciseRepository {
-    constructor(@Inject(ExerciseEntity) private readonly exerciseRepository: Repository<ExerciseEntity>, @Inject(TemplateEntity) private readonly templateRepository: Repository<TemplateEntity>){}
+    constructor(
+        @InjectRepository(ExerciseEntity) private readonly exerciseRepository: Repository<ExerciseEntity>, 
+        @InjectRepository(TemplateEntity) private readonly templateRepository: Repository<TemplateEntity>
+    ) {}
 
     async create(createExerciseDto: CreateExerciseDto): Promise<ExerciseI> {
         try {
@@ -38,7 +42,7 @@ export class ExerciseRepositoryImpl implements ExerciseRepository {
 
     async findByTemplate(idTemplate: number): Promise<ExerciseI[]> {
         try {
-            const exercises = await this.exerciseRepository.find({where: {template: {id: idTemplate}}});
+            const exercises = await this.exerciseRepository.find({where: {template: {id: idTemplate}}, select: {template: {skills: true}}});
             return exercises;
         } catch (error) {
             throw new InternalServerErrorException(error);
