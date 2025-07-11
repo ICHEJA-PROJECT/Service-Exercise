@@ -1,4 +1,4 @@
-import { Inject, Injectable, InternalServerErrorException, NotFoundException } from "@nestjs/common";
+import { Injectable, InternalServerErrorException, NotFoundException } from "@nestjs/common";
 import { TemplateI } from "src/templates/domain/entitiesI/TemplateI";
 import { TemplateRepository } from "src/templates/domain/repositories/TemplateRepository";
 import { TemplateEntity } from "../entities/template.entity";
@@ -6,13 +6,14 @@ import { In, Repository } from "typeorm";
 import { CreateTemplateDto } from "../dtos/create-template.dto";
 import { TopicEntity } from "src/topics/data/entities/topic.entity";
 import { LayoutEntity } from "src/layouts/data/entities/layout.entity";
+import { InjectEntityManager, InjectRepository } from "@nestjs/typeorm";
 
 @Injectable()
 export class TemplateRepositoryImpl implements TemplateRepository {
     constructor(
-        @Inject(TemplateEntity) private readonly templateRepository: Repository<TemplateEntity>,
-        @Inject(TopicEntity) private readonly topicRepository: Repository<TopicEntity>,
-        @Inject(LayoutEntity) private readonly layoutRepository: Repository<LayoutEntity>
+        @InjectRepository(TemplateEntity) private readonly templateRepository: Repository<TemplateEntity>,
+        @InjectRepository(TopicEntity) private readonly topicRepository: Repository<TopicEntity>,
+        @InjectRepository(LayoutEntity) private readonly layoutRepository: Repository<LayoutEntity>
     ) {}
     
     async create(createTemplateDto: CreateTemplateDto): Promise<TemplateI> {
@@ -40,9 +41,9 @@ export class TemplateRepositoryImpl implements TemplateRepository {
         }
     }
 
-    async findByTopics(topics: number[]): Promise<TemplateI[]> {
+    async findByTopics(topicIds: number[]): Promise<TemplateI[]> {
         try {
-            const templates = await this.templateRepository.find({where: {topic: In(topics)}});
+            const templates = await this.templateRepository.find({where: {topic: In(topicIds)}, select: {skills: true}});
             return templates;
         } catch (error) {
             throw new NotFoundException(error);

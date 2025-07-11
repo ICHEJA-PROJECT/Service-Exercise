@@ -3,11 +3,13 @@ import { SkillRepository } from "src/templates/domain/repositories/SkillReposito
 import { CreateSkillDto } from "../dtos/create-skill.dto";
 import { Inject, Injectable, InternalServerErrorException } from "@nestjs/common";
 import { SkillEntity } from "../entities/skill.entity";
-import { Repository } from "typeorm";
+import { In, Repository } from "typeorm";
+import { GetSkillsByTemplatesDto } from "../dtos/get-skills-by-templates.dto";
+import { InjectRepository } from "@nestjs/typeorm";
 
 @Injectable()
 export class SkillRepositoryImpl implements SkillRepository {
-    constructor(@Inject(SkillEntity) private readonly skillRepository: Repository<SkillEntity>) {}
+    constructor(@InjectRepository(SkillEntity) private readonly skillRepository: Repository<SkillEntity>) {}
 
     async create(createSkillDto: CreateSkillDto): Promise<SkillI> {
         try {
@@ -21,6 +23,15 @@ export class SkillRepositoryImpl implements SkillRepository {
     async findAll(): Promise<SkillI[]> {
         try {
             const skills = await this.skillRepository.find();
+            return skills;
+        } catch (error) {
+            throw new InternalServerErrorException(error);
+        }
+    }
+
+    async findByTemplates(templateIds: number[]): Promise<SkillI[]> {
+        try {
+            const skills = await this.skillRepository.find({ where: {templates: {template: {id: In(templateIds)}}}});
             return skills;
         } catch (error) {
             throw new InternalServerErrorException(error);

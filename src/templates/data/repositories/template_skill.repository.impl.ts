@@ -1,18 +1,19 @@
 import { TemplateSkillI } from "src/templates/domain/entitiesI/TemplateSkillI";
 import { TemplateSkillRepository } from "src/templates/domain/repositories/TemplateSkillRepository";
 import { CreateTemplateSkillDto } from "../dtos/create-template-skill.dto";
-import { Inject, Injectable, InternalServerErrorException, NotFoundException } from "@nestjs/common";
+import { Injectable, InternalServerErrorException, NotFoundException } from "@nestjs/common";
 import { TemplateSkillEntity } from "../entities/template_skill.entity";
 import { Repository } from "typeorm";
 import { SkillEntity } from "../entities/skill.entity";
 import { TemplateEntity } from "../entities/template.entity";
+import { InjectRepository } from "@nestjs/typeorm";
 
 @Injectable()
 export class TemplateSkillRepositoryImpl implements TemplateSkillRepository {
     constructor(
-        @Inject(TemplateSkillEntity) private readonly templateSkillRepository: Repository<TemplateSkillEntity>,
-        @Inject(SkillEntity) private readonly skillRepository: Repository<SkillEntity>,
-        @Inject(TemplateEntity) private readonly templateRepository: Repository<TemplateEntity>
+        @InjectRepository(TemplateSkillEntity) private readonly templateSkillRepository: Repository<TemplateSkillEntity>,
+        @InjectRepository(SkillEntity) private readonly skillRepository: Repository<SkillEntity>,
+        @InjectRepository(TemplateEntity) private readonly templateRepository: Repository<TemplateEntity>
     ) {}
 
     async create(createTemplateSkillDto: CreateTemplateSkillDto): Promise<TemplateSkillI> {

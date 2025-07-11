@@ -19,4 +19,6 @@ export class TemplateSkillEntity implements TemplateSkillI {
     skill: SkillI;
     @Column({name: "porcentaje", type: "float"})
     porcentage: number;
+    @Column({ name: "bandera", type: "boolean"})
+    flag: boolean;
 }
