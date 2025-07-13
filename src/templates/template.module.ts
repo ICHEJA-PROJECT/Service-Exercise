@@ -22,6 +22,7 @@ import { TemplateInstructionMediaRepositoryImpl } from "./data/repositories/temp
 import { TemplateSkillService } from "./services/template_skill.service";
 import { TemplateInstructionMediaService } from "./services/template_instruction_media.service";
 import { TemplateSkillRepositoryImpl } from "./data/repositories/template_skill.repository.impl";
+import { UploadFileTransport } from "./transports/upload-file.transport";
 
 @Module({
     imports: [
@@ -33,7 +34,8 @@ import { TemplateSkillRepositoryImpl } from "./data/repositories/template_skill.
             TemplateEntity,
             TemplateInstructionMediaEntity,
             TemplateSkillEntity
-        ])
+        ]),
+        UploadFileTransport
     ],
     controllers: [
         TypeInstructionMediaController, 

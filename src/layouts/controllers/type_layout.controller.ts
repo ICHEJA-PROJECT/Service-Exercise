@@ -2,7 +2,7 @@ import { Body, Controller, Get, HttpCode, HttpStatus, Post } from "@nestjs/commo
 import { TypeLayoutService } from "../services/type_layout.service";
 import { CreateTypeLayoutDto } from "../data/dtos/create-type-layout.dto";
 
-@Controller('layouts/types')
+@Controller('layouts-types')
 export class TypeLayoutController {
     constructor(private readonly typeLayoutService: TypeLayoutService) {}
 
