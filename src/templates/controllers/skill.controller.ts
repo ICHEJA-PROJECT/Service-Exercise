@@ -19,7 +19,7 @@ export class SkillController {
         return await this.skillService.findAll();
     }
 
-    @Get()
+    @Get('/templates')
     @HttpCode(HttpStatus.OK)
     async getByTemplates(@Body() getSkillsByTemplatesDto: GetSkillsByTemplatesDto) {
         return await this.skillService.findByTemplates(getSkillsByTemplatesDto.templateIds);
