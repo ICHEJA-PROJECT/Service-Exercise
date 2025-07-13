@@ -7,14 +7,14 @@ import { ResourceEntity } from "src/topics/data/entities/resource.entity";
 import { TemplateI } from "src/templates/domain/entitiesI/TemplateI";
 import { TemplateEntity } from "src/templates/data/entities/template.entity";
 
-@Entity('Layout')
+@Entity('layout')
 export class LayoutEntity implements LayoutI {
     @PrimaryGeneratedColumn('increment', {name: "id_layout"})
     id: number;
-    @Column({name: "Nombre", type: "varchar", length: 64, nullable: false})
+    @Column({name: "nombre", type: "varchar", length: 64, nullable: false})
     name: string;
     @ManyToOne(() => TypeLayoutEntity, typelayout => typelayout.layouts)
-    @JoinColumn({name: "ID_Tipo_Layout"})
+    @JoinColumn({name: "id_tipo_layout"})
     typeLayout: TypeLayoutI;
     @OneToMany(() => ResourceEntity, resource => resource.layout)
     resources: ResourceI[];
