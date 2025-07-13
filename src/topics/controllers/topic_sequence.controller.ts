@@ -2,7 +2,7 @@ import { Body, Controller, Get, HttpCode, HttpStatus, Post } from "@nestjs/commo
 import { TopicSequenceService } from "../services/topic_sequence.service";
 import { CreateTopicSequenceDto } from "../data/dtos/create-topic-sequence.dto";
 
-@Controller('topics/sequences')
+@Controller('topics-sequences')
 export class TopicSequenceController {
     constructor(private readonly topicSequenceSevrice: TopicSequenceService) {}
 

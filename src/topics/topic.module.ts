@@ -18,6 +18,10 @@ import { TopicSequenceRepositoryImpl } from "./data/repositories/topic_sequence.
 import { TopicSequenceService } from "./services/topic_sequence.service";
 import { UnitRepositoryImpl } from "./data/repositories/unit.repository.impl";
 import { UnitService } from "./services/unit.service";
+import { TopicResourceEntity } from "./data/entities/topic_resource.entity";
+import { TopicResourceRepositoryImpl } from "./data/repositories/topic_resource.repository.impl";
+import { TopicResourceService } from "./services/topic_resource.service";
+import { TopicResourceController } from "./controllers/topic_resource.controller";
 
 @Module({
     imports: [
@@ -26,7 +30,8 @@ import { UnitService } from "./services/unit.service";
             ResourceEntity, 
             LayoutEntity, 
             TopicEntity, 
-            TopicSequenceEntity, 
+            TopicSequenceEntity,
+            TopicResourceEntity 
         ]),
     ],
     providers: [
@@ -35,16 +40,19 @@ import { UnitService } from "./services/unit.service";
         GetAvaibleTopicsUseCase, 
         TopicService, 
         ResourceRepositoryImpl, 
+        TopicResourceRepositoryImpl,
         ResourceService, 
         TopicSequenceService, 
         UnitRepositoryImpl, 
-        UnitService
+        UnitService,
+        TopicResourceService
     ],
     controllers: [
         TopicController, 
         ResourceController, 
         TopicSequenceController, 
-        UnitController
+        UnitController,
+        TopicResourceController
     ],
     exports: [TopicService]
 })
