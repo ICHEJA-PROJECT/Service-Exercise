@@ -1,5 +1,5 @@
 import { ApiProperty } from "@nestjs/swagger";
-import { IsNumber, IsString } from "class-validator";
+import { IsBoolean, IsNumber, IsString } from "class-validator";
 
 export class CreateTemplateSkillDto {
     @ApiProperty({ description: "id of template", type: "number"})
@@ -10,5 +10,8 @@ export class CreateTemplateSkillDto {
     skill: number;
     @ApiProperty({ description: "porcentage of skill in template", type: "number"})
     @IsNumber()
-    procentage: number;
+    porcentage: number;
+    @ApiProperty({ description: "flag to skill", type: "boolean", default: true})
+    @IsBoolean()
+    flag: boolean;
 }

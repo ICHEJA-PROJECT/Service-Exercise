@@ -19,6 +19,6 @@ export class TemplateInstructionMediaEntity implements TemplateInstructionMediaI
     @ManyToOne(() => TypeInstructionMediaEntity, typeInstructionMedia => typeInstructionMedia.instructionsMedias)
     @JoinColumn({name: "id_tipo_media"})
     typeMedia: TypeInstructionMediaI;
-    @Column({name: "ruta_media", type: "varchar", length: 64, nullable: false})
+    @Column({name: "ruta_media", type: "varchar", length: 254, nullable: false})
     pathMedia: string;
 }

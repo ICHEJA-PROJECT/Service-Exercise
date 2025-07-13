@@ -27,9 +27,10 @@ export class TemplateSkillRepositoryImpl implements TemplateSkillRepository {
             if(!template) throw new NotFoundException("El reactivo seleccionado no existe.")
 
             const templateSkill = this.templateSkillRepository.create({
-                porcentage: createTemplateSkillDto.procentage,
+                porcentage: createTemplateSkillDto.porcentage,
                 skill: skill,
-                template: template
+                template: template,
+                flag: createTemplateSkillDto.flag
             });
 
             return await this.templateSkillRepository.save(templateSkill);
