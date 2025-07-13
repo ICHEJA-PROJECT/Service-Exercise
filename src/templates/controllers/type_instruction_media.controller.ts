@@ -2,7 +2,7 @@ import { Body, Controller, Get, HttpCode, HttpStatus, Post } from "@nestjs/commo
 import { TypeInstructionMediaService } from "../services/type_instruction_media.service";
 import { CreateTypeInstructionMediaDto } from "../data/dtos/create-type-instruction-media.dto";
 
-@Controller('instructions/medias/types')
+@Controller('instructions-medias-types')
 export class TypeInstructionMediaController {
     constructor(private readonly typeInstructionMediaService: TypeInstructionMediaService) {}
 

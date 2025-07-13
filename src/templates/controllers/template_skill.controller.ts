@@ -2,7 +2,7 @@ import { Body, Controller, Get, HttpCode, HttpStatus, Post } from "@nestjs/commo
 import { TemplateSkillService } from "../services/template_skill.service";
 import { CreateTemplateSkillDto } from "../data/dtos/create-template-skill.dto";
 
-@Controller('templates/skills')
+@Controller('templates-skills')
 export class TemplateSkillController {
     constructor(private readonly templateSkillService: TemplateSkillService) {}
 
