@@ -7,6 +7,7 @@ import { Repository } from "typeorm";
 import { TemplateEntity } from "../entities/template.entity";
 import { TypeInstructionMediaEntity } from "../entities/type_instruction_media.entity";
 import { InjectRepository } from "@nestjs/typeorm";
+import { TemplateInstructionMedia } from "src/templates/domain/entities/TemplateInstructionMedia";
 
 @Injectable()
 export class TemplateInstructionMediaRepositoryImpl implements TemplateInstructionMediaRepository {
@@ -16,24 +17,24 @@ export class TemplateInstructionMediaRepositoryImpl implements TemplateInstructi
         @InjectRepository(TypeInstructionMediaEntity) private readonly typeInstructionMediaRepository: Repository<TypeInstructionMediaEntity>
     ){}
 
-    async create(createTemplateInstructionMediaDto: CreateTemplateInstructionMediaDto): Promise<TemplateInstructionMediaI> {
+    async create(templateInstructionMedia: TemplateInstructionMedia): Promise<TemplateInstructionMediaI> {
         try {
             
-            const template = await this.templateRepository.findOne({where: {id: createTemplateInstructionMediaDto.template}});
+            const template = await this.templateRepository.findOne({where: {id: templateInstructionMedia.templateId}});
             
             if(!template) throw new NotFoundException("El template seleccionado no existe.");
 
-            const typeMedia = await this.typeInstructionMediaRepository.findOne({where: {id: createTemplateInstructionMediaDto.typeMedia}});
+            const typeMedia = await this.typeInstructionMediaRepository.findOne({where: {id: templateInstructionMedia.typeMediaId}});
 
             if(!typeMedia) throw new NotFoundException("El tipo de media seleccionado no existe.");
 
-            const templateInstructionMedia = this.templateInstructinMediaRepository.create({
-                pathMedia: createTemplateInstructionMediaDto.pathMedia, 
+            const templateInstructionMediaSaved = this.templateInstructinMediaRepository.create({
+                pathMedia: templateInstructionMedia.pathMedia, 
                 template: template,
                 typeMedia: typeMedia
             });
 
-            return await this.templateInstructinMediaRepository.save(templateInstructionMedia);
+            return await this.templateInstructinMediaRepository.save(templateInstructionMediaSaved);
         } catch (error) {
             throw new InternalServerErrorException(error);
         }
