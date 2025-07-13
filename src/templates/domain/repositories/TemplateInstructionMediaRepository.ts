@@ -1,7 +1,7 @@
-import { CreateTemplateInstructionMediaDto } from "src/templates/data/dtos/create-template-instruction-media.dto";
 import { TemplateInstructionMediaI } from "../entitiesI/TemplateInstructionMediaI";
+import { TemplateInstructionMedia } from "../entities/TemplateInstructionMedia";
 
 export interface TemplateInstructionMediaRepository {
-    create(createTemplateInstructionMediaDto: CreateTemplateInstructionMediaDto): Promise<TemplateInstructionMediaI>;
+    create(templateInstructionMedia: TemplateInstructionMedia): Promise<TemplateInstructionMediaI>;
     findAll(): Promise<TemplateInstructionMediaI[]>;
 }
