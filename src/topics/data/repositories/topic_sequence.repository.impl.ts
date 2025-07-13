@@ -21,7 +21,7 @@ export class TopicSequenceRepositoryImpl implements TopicSequenceRepository {
 
     async findAll(): Promise<TopicSequenceI[]> {
         try {
-            const sequences = await this.topicSequenceRepository.find();
+            const sequences = await this.topicSequenceRepository.find({relations: ["currentTopic", "nextTopic"]});
             return sequences;
         } catch (error) {
             throw new InternalServerErrorException(error);

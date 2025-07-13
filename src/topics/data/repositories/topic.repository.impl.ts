@@ -59,4 +59,13 @@ export class TopicRepositoryImpl implements TopicRepository {
             throw new InternalServerErrorException(error);
         }
     }
+
+    async findAll(): Promise<TopicI[]> {
+        try {
+            const topics = await this.topicRepository.find();
+            return topics;
+        } catch (error) {
+            throw new InternalServerErrorException(error);
+        }
+    }
 }

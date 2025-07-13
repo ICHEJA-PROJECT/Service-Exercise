@@ -1,6 +1,6 @@
 
 import { TopicI } from "src/topics/domain/entititesI/TopicI";
-import { Entity, JoinColumn, ManyToMany, PrimaryColumn } from "typeorm";
+import { Entity, JoinColumn, ManyToOne, PrimaryColumn } from "typeorm";
 import { TopicEntity } from "./topic.entity";
 import { TopicSequenceI } from "src/topics/domain/entititesI/TopicSequenceI";
 
@@ -12,11 +12,11 @@ export class TopicSequenceEntity implements TopicSequenceI {
     @PrimaryColumn({ name: "tema_siguiente", type: "int", nullable: false})
     nextTopicId: number;
 
-    @ManyToMany(() => TopicEntity, topic => topic.nextTopics)
+    @ManyToOne(() => TopicEntity, topic => topic.nextTopics)
     @JoinColumn({name: "tema"})
     currentTopic: TopicI;
 
-    @ManyToMany(() => TopicEntity, topic => topic.previousTopics)
+    @ManyToOne(() => TopicEntity, topic => topic.previousTopics)
     @JoinColumn({name: "tema_siguiente"})
     nextTopic: TopicI;
 

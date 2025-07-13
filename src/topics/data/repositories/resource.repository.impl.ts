@@ -23,6 +23,7 @@ export class ResourceRepositoryImpl implements ResourceRepository {
             }
 
             const resourceCreated = this.resourceRepository.create({
+                title: createResource.title,
                 content: createResource.content,
                 layout: layout
             });
