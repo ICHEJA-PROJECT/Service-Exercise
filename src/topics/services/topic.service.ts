@@ -35,7 +35,7 @@ export class TopicService {
         try {
             
             // Consultar al servicio que contiene la tabla Educando-Temas para obtener los ids de los temas que ya ha completado.
-            const completedTopics = [0, 1];
+            const completedTopics = [1, 2];
 
             // Aquí implementar lógica de grafo dirigido para encontrar temas permitidos.
             const idTopics = await this.getAvaibleTopicsUseCase.run(completedTopics);
@@ -45,6 +45,15 @@ export class TopicService {
             // Devolver los temas a los que tiene acceso el educando.
             return avaibleTopics;
 
+        } catch (error) {
+            throw new InternalServerErrorException(error);
+        }
+    }
+
+    async findAll(): Promise<TopicI[]> {
+        try {
+            const topics = await this._topicRepository.findAll();
+            return topics;
         } catch (error) {
             throw new InternalServerErrorException(error);
         }

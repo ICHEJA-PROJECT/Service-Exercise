@@ -24,6 +24,12 @@ export class ResourceController {
         return await this.resourceService.findByTopic(id);
     }
 
+    @Get(':id')
+    @HttpCode(HttpStatus.OK)
+    async getById(@Param('id') id: number) {
+        return await this.resourceService.findOne(id);
+    }
+
     @Post()
     @HttpCode(HttpStatus.CREATED)
     async create(@Body() createResourceDto: CreateResourceDto) {
