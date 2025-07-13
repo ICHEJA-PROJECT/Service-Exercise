@@ -10,6 +10,7 @@ export class TemplateSkillService {
     async create(createTemplateSkillDto: CreateTemplateSkillDto) {
         try {
             const templateSkill = await this.templateSkillRepository.create(createTemplateSkillDto);
+            return templateSkill;
         } catch (error) {
             throw new InternalServerErrorException(error);
         }

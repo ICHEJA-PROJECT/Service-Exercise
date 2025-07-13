@@ -7,7 +7,7 @@ import { HttpService } from "@nestjs/axios";
 import { catchError, firstValueFrom } from "rxjs";
 import * as FormData from 'form-data';
 import { RpcException } from "@nestjs/microservices";
-import moment from "moment";
+import * as moment from "moment";
 
 @Injectable()
 export class TemplateInstructionMediaService {
@@ -21,7 +21,11 @@ export class TemplateInstructionMediaService {
 
             const formData = new FormData();
             const fileName = `${createTemplateInstructionMediaDto.template}-I-${moment().format('YYYY-MM-DD-HH-mm-ss')}`;
-            formData.append('file', createTemplateInstructionMediaDto.pathMedia as unknown as Blob);
+            
+            formData.append('file', createTemplateInstructionMediaDto.pathMedia.buffer, {
+                filename: createTemplateInstructionMediaDto.pathMedia.originalname,
+                contentType: createTemplateInstructionMediaDto.pathMedia.mimetype
+            });
             formData.append('fileName', fileName);
             formData.append('folder', 'instruction-medias');
 
