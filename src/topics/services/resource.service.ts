@@ -29,9 +29,19 @@ export class ResourceService {
             throw new InternalServerErrorException(error);
         }
     }
+
+    async findOne(id: number) {
+        try {
+            const resource = await this.resourceRepository.findOne(id);
+            return resource;
+        } catch (error) {
+            throw new InternalServerErrorException(error);
+        }
+    }
     
     async findByPupil(pupilId: number): Promise<ResourceI[]> {
         try {
+            console.log(`id pupil: ${pupilId}`);
             const topics = await this.topicService.findByPupil(pupilId);
             const topicIds = topics.map(topic => topic.id);
             const resources = await this.resourceRepository.findByTopics(topicIds);
@@ -43,7 +53,7 @@ export class ResourceService {
 
     async findByTopic(topicId: number) {
         try {
-            const resources = await this.findByTopic(topicId);
+            const resources = await this.resourceRepository.findByTopic(topicId);
             return resources;
         } catch (error) {
             throw new InternalServerErrorException(error);

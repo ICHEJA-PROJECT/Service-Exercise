@@ -6,6 +6,12 @@ import { CreateTopicDto } from "../data/dtos/create-topic.dto";
 export class TopicController {
     constructor(private readonly topicService: TopicService) {}
 
+    @Get()
+    @HttpCode(HttpStatus.OK)
+    async getAll() {
+        return await this.topicService.findAll();
+    }
+
     @Get('pupils/:id')
     @HttpCode(HttpStatus.OK)
     async getTopicsByPupil(@Param('id') id: number) {
