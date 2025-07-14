@@ -5,12 +5,17 @@ import { Topic } from "../domain/entities/Topic";
 import { TopicI } from "../domain/entititesI/TopicI";
 import { GetAvaibleTopicsUseCase } from "../domain/usecases/GetAvaibleTopicsUseCase";
 import { TopicRepositoryImpl } from "../data/repositories/topic.repository.impl";
+import { HttpService } from "@nestjs/axios";
+import { catchError, firstValueFrom } from "rxjs";
+import { RpcException } from "@nestjs/microservices";
 
 @Injectable()
 export class TopicService {
     constructor(
         @Inject(TopicRepositoryImpl) private readonly _topicRepository: TopicRepository, 
-        private readonly getAvaibleTopicsUseCase: GetAvaibleTopicsUseCase) {}
+        private readonly getAvaibleTopicsUseCase: GetAvaibleTopicsUseCase,
+        private readonly httpService: HttpService
+    ) {}
 
     async create(topic: CreateTopicDto): Promise<TopicI> {
         try {
@@ -35,7 +40,21 @@ export class TopicService {
         try {
             
             // Consultar al servicio que contiene la tabla Educando-Temas para obtener los ids de los temas que ya ha completado.
-            const completedTopics = [1, 2];
+            const pupilTopicsResponse = await firstValueFrom(
+                this.httpService.get(`/pupil-topics/${idPupil}`)
+                    .pipe(
+                        catchError((error) => {
+                            console.error('Error en la petición:', error);
+                            throw new RpcException({
+                                message: error.message || 'Error en la petición HTTP',
+                                code: error.code || 'HTTP_ERROR',
+                                details: error.response?.data || error
+                            });
+                        })
+                    )
+            );
+
+            const completedTopics = pupilTopicsResponse.data;
 
             // Aquí implementar lógica de grafo dirigido para encontrar temas permitidos.
             const idTopics = await this.getAvaibleTopicsUseCase.run(completedTopics);

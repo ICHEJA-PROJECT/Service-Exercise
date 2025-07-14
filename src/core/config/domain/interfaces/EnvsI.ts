@@ -7,4 +7,5 @@ export interface EnvsI {
     DB_PASSWORD: string;
     BROKER_HOSTS: string[];
     UPLOAD_FILES_SERVICE_URL: string;
+    PUPIL_TOPICS_SERVICE_URL: string;
 }

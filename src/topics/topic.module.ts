@@ -22,6 +22,7 @@ import { TopicResourceEntity } from "./data/entities/topic_resource.entity";
 import { TopicResourceRepositoryImpl } from "./data/repositories/topic_resource.repository.impl";
 import { TopicResourceService } from "./services/topic_resource.service";
 import { TopicResourceController } from "./controllers/topic_resource.controller";
+import { GetPupilTopicsTransport } from "./transports/get-pupil-topics.transport";
 
 @Module({
     imports: [
@@ -33,6 +34,7 @@ import { TopicResourceController } from "./controllers/topic_resource.controller
             TopicSequenceEntity,
             TopicResourceEntity 
         ]),
+        GetPupilTopicsTransport
     ],
     providers: [
         TopicSequenceRepositoryImpl, 

@@ -3,7 +3,6 @@ import { EnvsI } from "./domain/interfaces/EnvsI";
 import { envsValidator } from "./validators/envs.validator";
 
 const getEnvs = (): EnvsI => {
-    console.log(process.env);
 
     const { error, value } = envsValidator.validate({
         ...process.env,
@@ -22,7 +21,8 @@ const getEnvs = (): EnvsI => {
         DB_USERNAME: value.DB_USERNAME,
         DB_PASSWORD: value.DB_PASSWORD,
         BROKER_HOSTS: value.BROKER_HOSTS,
-        UPLOAD_FILES_SERVICE_URL: value.UPLOAD_FILES_SERVICE_URL
+        UPLOAD_FILES_SERVICE_URL: value.UPLOAD_FILES_SERVICE_URL,
+        PUPIL_TOPICS_SERVICE_URL: value.PUPIL_TOPICS_SERVICE_URL,
     }
 }
 
