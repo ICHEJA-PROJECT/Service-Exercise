@@ -19,7 +19,7 @@ export class TemplateEntity implements TemplateI {
     title: string;
     @Column({ name: "instrucciones", type: "text", nullable: false })
     instructions: string;
-    @Column({ name: "tiempo_sugerido", type: "varchar", nullable: false})
+    @Column({ name: "tiempo_sugerido", type: "time without time zone", nullable: false})
     suggestTime: string;
     @Column({ name: "atributos", type: "json" , nullable: false})
     attributes: object;
