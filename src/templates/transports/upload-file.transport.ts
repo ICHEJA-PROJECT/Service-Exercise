@@ -1,10 +1,11 @@
 import { HttpModule } from "@nestjs/axios";
 import { Module } from "@nestjs/common";
+import { envsValues } from "src/core/config/getEnvs";
 
 @Module({
     imports: [
         HttpModule.register({
-            baseURL: "http://localhost:8080",
+            baseURL: envsValues.UPLOAD_FILES_SERVICE_URL,
             timeout: 5000,
         }),
     ],
