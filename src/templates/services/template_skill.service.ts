@@ -24,4 +24,13 @@ export class TemplateSkillService {
             throw new InternalServerErrorException(error);
         }
     }
+
+    async findManyByTemplates(templateIds: number[]) {
+        try {
+            const templateSkills = await this.templateSkillRepository.findManyByTemplates(templateIds);
+            return templateSkills;
+        } catch (error) {
+            throw new InternalServerErrorException(error);
+        }
+    }
 }

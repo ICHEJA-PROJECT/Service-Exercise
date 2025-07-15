@@ -56,7 +56,7 @@ import { UploadFileTransport } from "./transports/upload-file.transport";
         TemplateInstructionMediaService,
         TemplateSkillService
     ],
-    exports: [TemplateService, SkillService]
+    exports: [TemplateService, SkillService, TemplateSkillService]
 })
 
 export class TemplateModule {}

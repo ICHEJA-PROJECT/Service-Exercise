@@ -3,7 +3,7 @@ import { TemplateSkillRepository } from "src/templates/domain/repositories/Templ
 import { CreateTemplateSkillDto } from "../dtos/create-template-skill.dto";
 import { Injectable, InternalServerErrorException, NotFoundException } from "@nestjs/common";
 import { TemplateSkillEntity } from "../entities/template_skill.entity";
-import { Repository } from "typeorm";
+import { In, Repository } from "typeorm";
 import { SkillEntity } from "../entities/skill.entity";
 import { TemplateEntity } from "../entities/template.entity";
 import { InjectRepository } from "@nestjs/typeorm";
@@ -43,6 +43,15 @@ export class TemplateSkillRepositoryImpl implements TemplateSkillRepository {
         try {
             const templateSkills = await this.templateSkillRepository.find();
             return templateSkills;
+        } catch (error) {
+            throw new InternalServerErrorException(error);
+        }
+    }
+
+    async findManyByTemplates(templateIds: number[]): Promise<TemplateSkillI[]> {
+        try {
+            const templateSkils = await this.templateSkillRepository.find({where:{templateId:In(templateIds)}});
+            return templateSkils;
         } catch (error) {
             throw new InternalServerErrorException(error);
         }
