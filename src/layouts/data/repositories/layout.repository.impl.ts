@@ -22,6 +22,7 @@ export class LayoutRepositoryImpl implements LayoutRepository {
             }
             const layoutSaved = this.layoutRepository.create({
                 name: createLayout.name,
+                attributes: createLayout.attributes,
                 typeLayout: typeLayout
             });
 
