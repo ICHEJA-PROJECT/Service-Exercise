@@ -12,6 +12,12 @@ export class ExerciseController {
         return await this.exerciseService.create(createExerciseDto);
     }
 
+    @Get()
+    @HttpCode(HttpStatus.OK)
+    async findAll() {
+        return await this.exerciseService.findAll();
+    }
+
     @Get('pupil/:id')
     @HttpCode(HttpStatus.OK)
     async findByPupil(@Param('id') id: number) {

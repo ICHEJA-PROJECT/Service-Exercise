@@ -41,6 +41,11 @@ export class ExerciseService {
             // Aquí realizar consulta al servicio que contenga Educando-Historial
 
             // Al servicio de AG, le enviaré skills, templates, Educando-Estadisticas, Educando-Historial
+
+            // Skills, Templates, Conteo, Calificaciones actuales del educando. 
+            // Conteo: Consultar al servicio educando_ejercicios para traer que ejercicios a hecho;
+            // Calificaciones: Consultar al caso de uso del educando_ejercicio_habilidades Parametros(skills);
+
             
             return [];
         } catch (error) {
@@ -52,6 +57,15 @@ export class ExerciseService {
         try {
             const exercise = await this.exerciseRepository.findOne(id);
             return exercise;
+        } catch (error) {
+            throw new InternalServerErrorException(error);
+        }
+    }
+
+    async findAll() {
+        try {
+            const exercises = await this.exerciseRepository.findAll();
+            return exercises;
         } catch (error) {
             throw new InternalServerErrorException(error);
         }

@@ -30,7 +30,7 @@ export class ExerciseRepositoryImpl implements ExerciseRepository {
 
     async findOne(id: number): Promise<ExerciseI> {
         try {
-            const exercise = await this.exerciseRepository.findOne({where:{id}});
+            const exercise = await this.exerciseRepository.findOne({where:{id}, relations: {template: {skills: true}}});
 
             if(!exercise) throw new NotFoundException('el ejercicio solicitado no existe.')
 
@@ -43,6 +43,15 @@ export class ExerciseRepositoryImpl implements ExerciseRepository {
     async findByTemplate(idTemplate: number): Promise<ExerciseI[]> {
         try {
             const exercises = await this.exerciseRepository.find({where: {template: {id: idTemplate}}, select: {template: {skills: true}}});
+            return exercises;
+        } catch (error) {
+            throw new InternalServerErrorException(error);
+        }
+    }
+
+    async findAll(): Promise<ExerciseI[]> {
+        try {
+            const exercises = await this.exerciseRepository.find();
             return exercises;
         } catch (error) {
             throw new InternalServerErrorException(error);
