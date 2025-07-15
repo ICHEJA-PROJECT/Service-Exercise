@@ -1,10 +1,9 @@
 import { SkillI } from "src/templates/domain/entitiesI/SkillI";
 import { SkillRepository } from "src/templates/domain/repositories/SkillRepository";
 import { CreateSkillDto } from "../dtos/create-skill.dto";
-import { Inject, Injectable, InternalServerErrorException } from "@nestjs/common";
+import { Injectable, InternalServerErrorException } from "@nestjs/common";
 import { SkillEntity } from "../entities/skill.entity";
 import { In, Repository } from "typeorm";
-import { GetSkillsByTemplatesDto } from "../dtos/get-skills-by-templates.dto";
 import { InjectRepository } from "@nestjs/typeorm";
 
 @Injectable()
