@@ -9,7 +9,6 @@ export interface TemplateI {
     title: string;
     instructions: string;
     suggestTime: string;
-    attributes: object;
     topic: TopicI;
     exercises: ExerciseI[];
     layout: LayoutI;

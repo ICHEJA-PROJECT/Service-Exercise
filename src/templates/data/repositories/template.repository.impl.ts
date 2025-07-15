@@ -30,12 +30,30 @@ export class TemplateRepositoryImpl implements TemplateRepository {
                 title: createTemplateDto.title,
                 instructions: createTemplateDto.instructions,
                 suggestTime: createTemplateDto.suggestTime,
-                attributes: createTemplateDto.attributes,
                 topic: topic,
                 layout: layout
             });
 
             return await this.templateRepository.save(template);
+        } catch (error) {
+            throw new InternalServerErrorException(error);
+        }
+    }
+
+    async findAll(): Promise<TemplateI[]> {
+        try {
+            const templates = await this.templateRepository.find({relations: {layout: true, skills: true}});
+            return templates;
+        } catch (error) {
+            throw new InternalServerErrorException(error);
+        }
+    }
+
+    async findOne(id: number): Promise<TemplateI> {
+        try {
+            const template = await this.templateRepository.findOne({ where: {id: id}, relations: {layout: true, skills: true}});
+            if(!template) throw new NotFoundException("El reactivo no existe.");
+            return template;
         } catch (error) {
             throw new InternalServerErrorException(error);
         }
