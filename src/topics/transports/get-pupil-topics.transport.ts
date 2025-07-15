@@ -5,7 +5,7 @@ import { envsValues } from "src/core/config/getEnvs";
 @Module({
     imports: [
         HttpModule.register({
-            baseURL: envsValues.PUPIL_TOPICS_SERVICE_URL,
+            baseURL: envsValues.PUPIL_RECORDS_SERVICE_URL,
             timeout: 5000,
         })
     ],
