@@ -1,21 +1,23 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
-import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { envsValues } from './core/config/getEnvs';
+import { MicroserviceOptions, Transport } from '@nestjs/microservices';
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule);
+  const app = await NestFactory.createMicroservice<MicroserviceOptions>(
+    AppModule,
+    {
+      transport: Transport.RMQ,
+      options: {
+        urls: envsValues.BROKER_HOSTS,
+        queue: 'exercises_queue',
+        queueOptions: {
+          durable: true,
+        },
+      },
+    },
+  );
 
-  const config = new DocumentBuilder()
-    .setTitle("Service-Exercise")
-    .setDescription("Service to manage all exercise and relations in AprendIA platform")
-    .setVersion("1.0")
-    .build();
-  
-    const documentFactory = () => SwaggerModule.createDocument(app, config);
-
-    SwaggerModule.setup('api', app, documentFactory);
-    
-  await app.listen(process.env.PORT ?? envsValues.PORT);
+  await app.listen();
 }
 bootstrap();

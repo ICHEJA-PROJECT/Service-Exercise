@@ -1,15 +1,39 @@
-import { HttpModule } from "@nestjs/axios";
-import { Module } from "@nestjs/common";
-import { envsValues } from "src/core/config/getEnvs";
+import { HttpModule } from '@nestjs/axios';
+import { Module } from '@nestjs/common';
+import { ClientsModule, Transport } from '@nestjs/microservices';
+import { envsValues } from 'src/core/config/getEnvs';
+import { RECORD_SERVICE_OPTIONS } from 'src/shared/constants/record_service_options';
 
 @Module({
-    imports: [
-        HttpModule.register({
-            baseURL: envsValues.PUPIL_TOPICS_SERVICE_URL,
-            timeout: 5000,
-        })
-    ],
-    exports: [HttpModule]
+  imports: [
+    ClientsModule.register([
+      {
+        name: RECORD_SERVICE_OPTIONS.RECORD_SERVICE_NAME,
+        transport: Transport.RMQ,
+        options: {
+          urls: envsValues.BROKER_HOSTS,
+          queue: RECORD_SERVICE_OPTIONS.RECORD_QUEUE,
+          queueOptions: {
+            durable: true,
+          },
+        },
+      },
+    ]),
+  ],
+  exports: [
+    ClientsModule.register([
+      {
+        name: RECORD_SERVICE_OPTIONS.RECORD_SERVICE_NAME,
+        transport: Transport.RMQ,
+        options: {
+          urls: envsValues.BROKER_HOSTS,
+          queue: RECORD_SERVICE_OPTIONS.RECORD_QUEUE,
+          queueOptions: {
+            durable: true,
+          },
+        },
+      },
+    ]),
+  ],
 })
-
-export class GetPupilTopicsTransport{}
+export class GetPupilTopicsTransport {}

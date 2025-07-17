@@ -10,5 +10,4 @@ export const envsValidator = Joi.object<EnvsI>({
     DB_PASSWORD: Joi.string().required().description("Password to access at database"),
     BROKER_HOSTS: Joi.array().items(Joi.string()).required().description("Hosts of the message broker"),
     UPLOAD_FILES_SERVICE_URL: Joi.string().required(),
-    PUPIL_TOPICS_SERVICE_URL: Joi.string().required(),
 }).unknown(true);
