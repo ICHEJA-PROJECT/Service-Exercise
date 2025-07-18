@@ -10,22 +10,29 @@ import { RpcException } from '@nestjs/microservices';
 
 @Injectable()
 export class LayoutRepositoryImpl implements LayoutRepository {
-    constructor(
-        @InjectRepository(LayoutEntity) private readonly layoutRepository: Repository<LayoutEntity>, 
-        @InjectRepository(TypeLayoutEntity) private readonly typeLayoutRepository: Repository<TypeLayoutEntity>
-    ){}
-    
-    async create(createLayout: CreateLayoutDto): Promise<LayoutI> {
-        try {
-            const typeLayout = await this.typeLayoutRepository.findOne({where: { id: createLayout.type_layout_id }})
-            if(!typeLayout) {
-                throw new InternalServerErrorException("El tipo de vista no existe.")
-            }
-            const layoutSaved = this.layoutRepository.create({
-                name: createLayout.name,
-                attributes: createLayout.attributes,
-                typeLayout: typeLayout
-            });
+  constructor(
+    @InjectRepository(LayoutEntity)
+    private readonly layoutRepository: Repository<LayoutEntity>,
+    @InjectRepository(TypeLayoutEntity)
+    private readonly typeLayoutRepository: Repository<TypeLayoutEntity>,
+  ) {}
+
+  async create(createLayout: CreateLayoutDto): Promise<LayoutI> {
+    try {
+      const typeLayout = await this.typeLayoutRepository.findOne({
+        where: { id: createLayout.type_layout_id },
+      });
+      if (!typeLayout) {
+        throw new RpcException({
+          status: HttpStatus.NOT_FOUND,
+          message: 'El tipo de vista no existe.',
+        });
+      }
+      const layoutSaved = this.layoutRepository.create({
+        name: createLayout.name,
+        attributes: createLayout.attributes,
+        typeLayout: typeLayout,
+      });
 
       return await this.layoutRepository.save(layoutSaved);
     } catch (error) {

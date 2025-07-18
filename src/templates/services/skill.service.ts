@@ -1,7 +1,8 @@
-import { Inject, Injectable, InternalServerErrorException } from "@nestjs/common";
-import { SkillRepositoryImpl } from "../data/repositories/skill.repository.impl";
-import { SkillRepository } from "../domain/repositories/SkillRepository";
-import { CreateSkillDto } from "../data/dtos/create-skill.dto";
+import { HttpStatus, Inject, Injectable } from '@nestjs/common';
+import { SkillRepositoryImpl } from '../data/repositories/skill.repository.impl';
+import { SkillRepository } from '../domain/repositories/SkillRepository';
+import { CreateSkillDto } from '../data/dtos/create-skill.dto';
+import { RpcException } from '@nestjs/microservices';
 
 @Injectable()
 export class SkillService {
