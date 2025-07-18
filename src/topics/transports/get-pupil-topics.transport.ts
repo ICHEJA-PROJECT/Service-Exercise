@@ -1,4 +1,3 @@
-import { HttpModule } from '@nestjs/axios';
 import { Module } from '@nestjs/common';
 import { ClientsModule, Transport } from '@nestjs/microservices';
 import { envsValues } from 'src/core/config/getEnvs';

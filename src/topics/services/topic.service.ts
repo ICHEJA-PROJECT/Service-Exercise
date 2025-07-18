@@ -1,8 +1,4 @@
-import {
-  Inject,
-  Injectable,
-  InternalServerErrorException,
-} from '@nestjs/common';
+import { HttpStatus, Inject, Injectable } from '@nestjs/common';
 import { CreateTopicDto } from '../data/dtos/create-topic.dto';
 import { TopicRepository } from '../domain/repositories/TopicRepository';
 import { Topic } from '../domain/entities/Topic';
@@ -29,7 +25,10 @@ export class TopicService {
       const topicSaved = await this._topicRepository.create(topicReq);
       return topicSaved;
     } catch (error) {
-      throw new InternalServerErrorException(error);
+      throw new RpcException({
+        status: HttpStatus.BAD_REQUEST,
+        message: error.message,
+      });
     }
   }
 
@@ -38,7 +37,10 @@ export class TopicService {
       const topic = await this._topicRepository.findOne(id);
       return topic;
     } catch (error) {
-      throw new InternalServerErrorException(error);
+      throw new RpcException({
+        status: HttpStatus.BAD_REQUEST,
+        message: error.message,
+      });
     }
   }
 
@@ -73,7 +75,10 @@ export class TopicService {
       // Devolver los temas a los que tiene acceso el educando.
       return avaibleTopics;
     } catch (error) {
-      throw new InternalServerErrorException(error);
+      throw new RpcException({
+        status: HttpStatus.BAD_REQUEST,
+        message: error.message,
+      });
     }
   }
 
@@ -82,7 +87,10 @@ export class TopicService {
       const topics = await this._topicRepository.findAll();
       return topics;
     } catch (error) {
-      throw new InternalServerErrorException(error);
+      throw new RpcException({
+        status: HttpStatus.BAD_REQUEST,
+        message: error.message,
+      });
     }
   }
 }
