@@ -25,15 +25,21 @@ export class TemplateSkillService {
     }
   }
 
-  async findAll() {
-    try {
-      const templateSkills = await this.templateSkillRepository.findAll();
-      return templateSkills;
-    } catch (error) {
-      throw new RpcException({
-        status: HttpStatus.BAD_REQUEST,
-        message: error.message,
-      });
+    async findAll() {
+        try {
+            const templateSkills = await this.templateSkillRepository.findAll();
+            return templateSkills;
+        } catch (error) {
+            throw new InternalServerErrorException(error);
+        }
     }
-  }
+
+    async findManyByTemplates(templateIds: number[]) {
+        try {
+            const templateSkills = await this.templateSkillRepository.findManyByTemplates(templateIds);
+            return templateSkills;
+        } catch (error) {
+            throw new InternalServerErrorException(error);
+        }
+    }
 }

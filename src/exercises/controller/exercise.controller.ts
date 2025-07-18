@@ -1,4 +1,4 @@
-import { Body, Controller, Get, HttpCode, HttpStatus, Param, Post } from "@nestjs/common";
+import { Body, Controller, Get, HttpCode, HttpStatus, Param, Post, Query } from "@nestjs/common";
 import { ExerciseService } from "../services/exercise.service";
 import { CreateExerciseDto } from "../data/dtos/create-exercise.dto";
 
@@ -10,6 +10,18 @@ export class ExerciseController {
     @HttpCode(HttpStatus.CREATED)
     async create(@Body() createExerciseDto: CreateExerciseDto) {
         return await this.exerciseService.create(createExerciseDto);
+    }
+
+    @Get()
+    @HttpCode(HttpStatus.OK)
+    async findAll() {
+        return await this.exerciseService.findAll();
+    }
+
+    @Get('/porcentage') 
+    @HttpCode(HttpStatus.OK)
+    async getPorcentageByIdAndSkill(@Query('id') id: string, @Query('skillId') skillId: string) {
+        return await this.exerciseService.getPorcentageByIdAndSkill(parseInt(id), parseInt(skillId));
     }
 
     @Get('pupil/:id')

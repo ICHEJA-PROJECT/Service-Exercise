@@ -1,7 +1,6 @@
-import { Body, Controller, Get, HttpCode, HttpStatus, Param, Post } from "@nestjs/common";
+import { Body, Controller, Get, HttpCode, HttpStatus, Param, Post, Query } from "@nestjs/common";
 import { TemplateService } from "../services/template.service";
 import { CreateTemplateDto } from "../data/dtos/create-template.dto";
-import { GetTemplatesByTopicsDto } from "../data/dtos/get-templates-by-topics.dto";
 
 @Controller('templates')
 export class TemplateController {
@@ -13,16 +12,30 @@ export class TemplateController {
         return await this.templateService.create(createTemplateDto);
     }
 
+    @Get()
+    @HttpCode(HttpStatus.OK)
+    async getAll() {
+        return await this.templateService.findAll();
+    }
+
     @Get('topics')
     @HttpCode(HttpStatus.OK)
-    async getByTopics(@Body() getTemplatesByTopicsDto: GetTemplatesByTopicsDto) {
-        return this.templateService.findByTopics(getTemplatesByTopicsDto.topicIds);
+    async getByTopics(@Query('topics') topics: string) {
+        let parsedTopics: number[];
+        parsedTopics = topics.split(',').map(topic => parseInt(topic.trim()));
+        return this.templateService.findByTopics(parsedTopics);
     }
 
     @Get('/topic/:id')
     @HttpCode(HttpStatus.OK)
     async getByTopic(@Param('id') id: number) {
         return await this.templateService.findByTopic(id);
+    }
+
+    @Get(':id')
+    @HttpCode(HttpStatus.OK)
+    async getById(@Param('id') id: number) {
+        return await this.templateService.findOne(id);
     }
 
 }

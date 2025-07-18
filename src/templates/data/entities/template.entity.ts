@@ -21,8 +21,6 @@ export class TemplateEntity implements TemplateI {
     instructions: string;
     @Column({ name: "tiempo_sugerido", type: "time without time zone", nullable: false})
     suggestTime: string;
-    @Column({ name: "atributos", type: "json" , nullable: false})
-    attributes: object;
     @ManyToOne(() => TopicEntity, topic => topic.templates)
     @JoinColumn({ name: "id_tema"})
     topic: TopicI;

@@ -11,9 +11,6 @@ export class CreateTemplateDto {
     @ApiProperty({ description: 'suggest time to complete template', type: "string"})
     @IsString()
     suggestTime: string;
-    @ApiProperty({ description: "skeleton of context", type: "object", additionalProperties: false})
-    @IsObject()
-    attributes: object;
     @ApiProperty({ description: "id of layout to template", type: "number"})
     @IsNumber()
     layout: number;

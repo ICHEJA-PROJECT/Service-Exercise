@@ -10,6 +10,7 @@ import { ExerciseRepositoryImpl } from "./data/repositories/exercise.repository.
 import { ExerciseService } from "./services/exercise.service";
 import { TopicModule } from "src/topics/topic.module";
 import { TemplateModule } from "src/templates/template.module";
+import { GetPupilRecordsTransport } from "./transports/get-pupil-records.transport";
 
 @Module({
     imports: [
@@ -18,7 +19,8 @@ import { TemplateModule } from "src/templates/template.module";
             ExerciseEntity
         ]), 
         TopicModule, 
-        TemplateModule
+        TemplateModule,
+        GetPupilRecordsTransport
     ],
     providers: [ExerciseRepositoryImpl, ExerciseService],
     controllers: [ExerciseController]

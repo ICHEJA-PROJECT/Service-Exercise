@@ -13,6 +13,8 @@ export class LayoutEntity implements LayoutI {
     id: number;
     @Column({name: "nombre", type: "varchar", length: 64, nullable: false})
     name: string;
+    @Column({name: 'atributos', type: 'jsonb', nullable: false})
+    attributes: object;
     @ManyToOne(() => TypeLayoutEntity, typelayout => typelayout.layouts)
     @JoinColumn({name: "id_tipo_layout"})
     typeLayout: TypeLayoutI;

@@ -62,15 +62,21 @@ export class TemplateSkillRepositoryImpl implements TemplateSkillRepository {
     }
   }
 
-  async findAll(): Promise<TemplateSkillI[]> {
-    try {
-      const templateSkills = await this.templateSkillRepository.find();
-      return templateSkills;
-    } catch (error) {
-      throw new RpcException({
-        status: HttpStatus.BAD_REQUEST,
-        message: error.message,
-      });
+    async findAll(): Promise<TemplateSkillI[]> {
+        try {
+            const templateSkills = await this.templateSkillRepository.find();
+            return templateSkills;
+        } catch (error) {
+            throw new InternalServerErrorException(error);
+        }
     }
-  }
+
+    async findManyByTemplates(templateIds: number[]): Promise<TemplateSkillI[]> {
+        try {
+            const templateSkils = await this.templateSkillRepository.find({where:{templateId:In(templateIds)}});
+            return templateSkils;
+        } catch (error) {
+            throw new InternalServerErrorException(error);
+        }
+    }
 }

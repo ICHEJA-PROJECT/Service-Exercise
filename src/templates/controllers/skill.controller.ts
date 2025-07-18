@@ -1,7 +1,6 @@
-import { Body, Controller, Get, HttpCode, HttpStatus, Post } from "@nestjs/common";
+import { Body, Controller, Get, HttpCode, HttpStatus, Post, Query } from "@nestjs/common";
 import { SkillService } from "../services/skill.service";
 import { CreateSkillDto } from "../data/dtos/create-skill.dto";
-import { GetSkillsByTemplatesDto } from "../data/dtos/get-skills-by-templates.dto";
 
 @Controller('skills')
 export class SkillController {
@@ -21,7 +20,9 @@ export class SkillController {
 
     @Get('/templates')
     @HttpCode(HttpStatus.OK)
-    async getByTemplates(@Body() getSkillsByTemplatesDto: GetSkillsByTemplatesDto) {
-        return await this.skillService.findByTemplates(getSkillsByTemplatesDto.templateIds);
+    async getByTemplates(@Query('skills') skills: string) {
+        let parsedSkills: number[];
+        parsedSkills = skills.split(',').map(skill => parseInt(skill.trim()));
+        return await this.skillService.findByTemplates(parsedSkills);
     }
 } 

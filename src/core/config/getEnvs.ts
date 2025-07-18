@@ -22,6 +22,7 @@ const getEnvs = (): EnvsI => {
         DB_PASSWORD: value.DB_PASSWORD,
         BROKER_HOSTS: value.BROKER_HOSTS,
         UPLOAD_FILES_SERVICE_URL: value.UPLOAD_FILES_SERVICE_URL,
+        PUPIL_RECORDS_SERVICE_URL: value.PUPIL_RECORDS_SERVICE_URL,
     }
 }
 

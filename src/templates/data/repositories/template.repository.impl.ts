@@ -44,23 +44,38 @@ export class TemplateRepositoryImpl implements TemplateRepository {
         });
       }
 
-      const template = this.templateRepository.create({
-        title: createTemplateDto.title,
-        instructions: createTemplateDto.instructions,
-        suggestTime: createTemplateDto.suggestTime,
-        attributes: createTemplateDto.attributes,
-        topic: topic,
-        layout: layout,
-      });
+            const template = this.templateRepository.create({
+                title: createTemplateDto.title,
+                instructions: createTemplateDto.instructions,
+                suggestTime: createTemplateDto.suggestTime,
+                topic: topic,
+                layout: layout
+            });
 
-      return await this.templateRepository.save(template);
-    } catch (error) {
-      throw new RpcException({
-        status: HttpStatus.BAD_REQUEST,
-        message: error.message,
-      });
+            return await this.templateRepository.save(template);
+        } catch (error) {
+            throw new InternalServerErrorException(error);
+        }
     }
-  }
+
+    async findAll(): Promise<TemplateI[]> {
+        try {
+            const templates = await this.templateRepository.find({relations: {layout: true, skills: true}});
+            return templates;
+        } catch (error) {
+            throw new InternalServerErrorException(error);
+        }
+    }
+
+    async findOne(id: number): Promise<TemplateI> {
+        try {
+            const template = await this.templateRepository.findOne({ where: {id: id}, relations: {layout: true, skills: true}});
+            if(!template) throw new NotFoundException("El reactivo no existe.");
+            return template;
+        } catch (error) {
+            throw new InternalServerErrorException(error);
+        }
+    }
 
   async findByTopics(topicIds: number[]): Promise<TemplateI[]> {
     try {
