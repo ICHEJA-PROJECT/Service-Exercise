@@ -50,13 +50,14 @@ export class TopicService {
       const pupilTopicsResponse = await firstValueFrom(
         this.client
           .send(
-            { cmd: RECORD_SERVICE_OPTIONS.PUPIL_TOPIC_FIND_BY_PUPIL },
+            { cmd: RECORD_SERVICE_OPTIONS.PUPIL_TOPIC_FIND_BY_PUPIL_ID },
             idPupil,
           )
           .pipe(
             catchError((error) => {
               console.error('Error en la petición:', error);
               throw new RpcException({
+                status: error.status,
                 message: error.message || 'Error en la petición HTTP',
                 code: error.code || 'HTTP_ERROR',
                 details: error.response?.data || error,

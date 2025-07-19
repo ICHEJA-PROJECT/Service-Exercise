@@ -56,17 +56,23 @@ export class ExerciseService {
 
       // Aquí realizar consulta al servicio que contenga Educando-Historial
       const pupilExercisesResponse = await firstValueFrom(
-        this.httpService.get(`/pupil-exercises/pupils/${id}/ids`).pipe(
-          catchError((error) => {
-            console.log('Error en la peticion:', error);
-            throw new RpcException({
-              message:
-                error.message || 'Error en la petición HTTP a pupilExercises',
-              code: error.code || 'HTTP_ERROR',
-              details: error.response?.data || error,
-            });
-          }),
-        ),
+        this.client
+          .send(
+            { cmd: RECORD_SERVICE_OPTIONS.PUPIL_EXERCISE_FIND_BY_PUPILS_IDS },
+            id,
+          )
+          .pipe(
+            catchError((error) => {
+              console.log('Error en la peticion:', error);
+              throw new RpcException({
+                status: error.status || HttpStatus.INTERNAL_SERVER_ERROR,
+                message:
+                  error.message || 'Error en la petición HTTP a pupilExercises',
+                code: error.code || 'HTTP_ERROR',
+                details: error.response?.data || error,
+              });
+            }),
+          ),
       );
 
       const pupilExerciseIds = pupilExercisesResponse.data;
@@ -77,15 +83,23 @@ export class ExerciseService {
         );
 
       // Aquí realizar consulta al servicio que contenga Educando-Estadisticas
+
       const pupilGradesResponse = await firstValueFrom(
-        this.httpService
-          .get(
-            `/pupil-skills/grades/skills?pupilId=${id}&skills=${skillIdsString}`,
+        this.client
+          .send(
+            { cmd: RECORD_SERVICE_OPTIONS.PUPIL_SKILL_FIND_GRADE_BY_SKILLS },
+            {
+              pupilId: id,
+              skills: skillIdsString
+                .split(',')
+                .map((skill) => parseInt(skill.trim())),
+            },
           )
           .pipe(
             catchError((error) => {
               console.log('Error en la petición:', error);
               throw new RpcException({
+                status: error.status || HttpStatus.INTERNAL_SERVER_ERROR,
                 message:
                   error.message || 'Error en la petición HTTP a pupilSkills',
                 code: error.code || 'HTTP_ERROR',
