@@ -1,32 +1,36 @@
-import { Body, Controller, Get, HttpCode, HttpStatus, Param, Post } from "@nestjs/common";
-import { TopicService } from "../services/topic.service";
-import { CreateTopicDto } from "../data/dtos/create-topic.dto";
+import { Controller } from '@nestjs/common';
+import { TopicService } from '../services/topic.service';
+import { CreateTopicDto } from '../data/dtos/create-topic.dto';
+import { MessagePattern, Payload } from '@nestjs/microservices';
+import { EXERCISE_SERVICE_OPTIONS } from 'src/shared/constants/exercise_service_options';
 
 @Controller('topics')
 export class TopicController {
-    constructor(private readonly topicService: TopicService) {}
+  constructor(private readonly topicService: TopicService) {}
 
-    @Get()
-    @HttpCode(HttpStatus.OK)
-    async getAll() {
-        return await this.topicService.findAll();
-    }
+  @MessagePattern({ cmd: EXERCISE_SERVICE_OPTIONS.EXERCISE_TOPIC_FIND_ALL })
+  async getAll() {
+    return await this.topicService.findAll();
+  }
 
-    @Get('pupils/:id')
-    @HttpCode(HttpStatus.OK)
-    async getTopicsByPupil(@Param('id') id: number) {
-        return await this.topicService.findByPupil(id);
-    }
+  @MessagePattern({
+    cmd: EXERCISE_SERVICE_OPTIONS.EXERCISE_TOPIC_FIND_BY_PUPIL,
+  })
+  async getTopicsByPupil(@Payload() id: number) {
+    return await this.topicService.findByPupil(id);
+  }
 
-    @Post()
-    @HttpCode(HttpStatus.CREATED)
-    async create(@Body() createTopicDto: CreateTopicDto) {
-        return await this.topicService.create(createTopicDto);
-    }
+  @MessagePattern({
+    cmd: EXERCISE_SERVICE_OPTIONS.EXERCISE_TOPIC_CREATE,
+  })
+  async create(@Payload() createTopicDto: CreateTopicDto) {
+    return await this.topicService.create(createTopicDto);
+  }
 
-    @Get('/:id')
-    @HttpCode(HttpStatus.OK)
-    async getTopic(@Param('id') id: number) {
-        return await this.topicService.findOne(id);
-    }
+  @MessagePattern({
+    cmd: EXERCISE_SERVICE_OPTIONS.EXERCISE_TOPIC_FIND_BY_ID,
+  })
+  async getTopic(@Payload() id: number) {
+    return await this.topicService.findOne(id);
+  }
 }

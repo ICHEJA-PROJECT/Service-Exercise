@@ -17,12 +17,12 @@ import { envsValues } from './core/config/getEnvs';
       entities: [__dirname + '/**/*.entity{.ts,.js}'],
       database: envsValues.DB_NAME,
       synchronize: true,
-      logging: true
+      logging: true,
     }),
     TopicModule,
     LayoutModule,
     TemplateModule,
-    ExerciseModule
+    ExerciseModule,
   ],
   controllers: [],
   providers: [],
