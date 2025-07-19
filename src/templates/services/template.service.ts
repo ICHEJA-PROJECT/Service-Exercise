@@ -1,9 +1,4 @@
-import {
-  HttpStatus,
-  Inject,
-  Injectable,
-  InternalServerErrorException,
-} from '@nestjs/common';
+import { HttpStatus, Inject, Injectable } from '@nestjs/common';
 import { TemplateRepositoryImpl } from '../data/repositories/template.repository.impl';
 import { TemplateRepository } from '../domain/repositories/TemplateRepository';
 import { CreateTemplateDto } from '../data/dtos/create-template.dto';

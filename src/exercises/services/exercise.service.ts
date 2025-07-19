@@ -1,9 +1,4 @@
-import {
-  HttpStatus,
-  Inject,
-  Injectable,
-  InternalServerErrorException,
-} from '@nestjs/common';
+import { HttpStatus, Inject, Injectable } from '@nestjs/common';
 import { ExerciseRepositoryImpl } from '../data/repositories/exercise.repository.impl';
 import { ExerciseRepository } from '../domain/repositories/ExerciseRepository';
 import { TopicService } from 'src/topics/services/topic.service';
@@ -12,10 +7,10 @@ import { TemplateService } from 'src/templates/services/template.service';
 import { CreateExerciseDto } from '../data/dtos/create-exercise.dto';
 import { TemplateSkillService } from 'src/templates/services/template_skill.service';
 import { catchError, firstValueFrom } from 'rxjs';
-import { HttpService } from '@nestjs/axios';
-import { RpcException } from '@nestjs/microservices';
+import { ClientProxy, RpcException } from '@nestjs/microservices';
+import { RECORD_SERVICE_OPTIONS } from 'src/shared/constants/record_service_options';
 
-Injectable();
+@Injectable()
 export class ExerciseService {
   constructor(
     @Inject(ExerciseRepositoryImpl)
@@ -24,7 +19,8 @@ export class ExerciseService {
     private readonly templateService: TemplateService,
     private readonly skillService: SkillService,
     private readonly templateSkillService: TemplateSkillService,
-    private readonly httpService: HttpService,
+    @Inject(RECORD_SERVICE_OPTIONS.RECORD_SERVICE_NAME)
+    private readonly client: ClientProxy,
   ) {}
 
   async create(createExerciseDto: CreateExerciseDto) {
@@ -115,7 +111,10 @@ export class ExerciseService {
 
       return [];
     } catch (error) {
-      throw new InternalServerErrorException(error);
+      throw new RpcException({
+        status: HttpStatus.BAD_REQUEST,
+        message: error.message || 'Error fetching exercises by pupil',
+      });
     }
   }
 
@@ -124,7 +123,10 @@ export class ExerciseService {
       const exercise = await this.exerciseRepository.findOne(id);
       return exercise;
     } catch (error) {
-      throw new InternalServerErrorException(error);
+      throw new RpcException({
+        status: HttpStatus.BAD_REQUEST,
+        message: error.message || 'Error fetching exercise by ID',
+      });
     }
   }
 
@@ -133,7 +135,10 @@ export class ExerciseService {
       const exercises = await this.exerciseRepository.findAll();
       return exercises;
     } catch (error) {
-      throw new InternalServerErrorException(error);
+      throw new RpcException({
+        status: HttpStatus.BAD_REQUEST,
+        message: error.message || 'Error fetching exercises',
+      });
     }
   }
 
@@ -145,7 +150,11 @@ export class ExerciseService {
       );
       return exercise.porcentage;
     } catch (error) {
-      throw new InternalServerErrorException(error);
+      throw new RpcException({
+        status: HttpStatus.BAD_REQUEST,
+        message:
+          error.message || 'Error fetching exercise percentage by ID and skill',
+      });
     }
   }
 }

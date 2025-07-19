@@ -1,7 +1,7 @@
 import { Module } from '@nestjs/common';
 import { ClientsModule, Transport } from '@nestjs/microservices';
 import { envsValues } from 'src/core/config/getEnvs';
-import { RECORD_SERVICE_OPTIONS } from 'src/shared/constants/record_service_options';
+import { RECORD_SERVICE_OPTIONS } from '../constants/record_service_options';
 
 @Module({
   imports: [
@@ -35,4 +35,4 @@ import { RECORD_SERVICE_OPTIONS } from 'src/shared/constants/record_service_opti
     ]),
   ],
 })
-export class GetPupilTopicsTransport {}
+export class ExercisesRecordTransport {}

@@ -1,41 +1,45 @@
-import { Body, Controller, Get, HttpCode, HttpStatus, Param, Post, Query } from "@nestjs/common";
-import { TemplateService } from "../services/template.service";
-import { CreateTemplateDto } from "../data/dtos/create-template.dto";
+import { Controller } from '@nestjs/common';
+import { TemplateService } from '../services/template.service';
+import { CreateTemplateDto } from '../data/dtos/create-template.dto';
+import { MessagePattern, Payload } from '@nestjs/microservices';
+import { EXERCISE_SERVICE_OPTIONS } from 'src/shared/constants/exercise_service_options';
 
 @Controller('templates')
 export class TemplateController {
-    constructor(private readonly templateService: TemplateService) {}
+  constructor(private readonly templateService: TemplateService) {}
 
-    @Post()
-    @HttpCode(HttpStatus.CREATED)
-    async create(@Body() createTemplateDto: CreateTemplateDto) {
-        return await this.templateService.create(createTemplateDto);
-    }
+  @MessagePattern({
+    cmd: EXERCISE_SERVICE_OPTIONS.EXERCISE_TEMPLATE_CREATE,
+  })
+  async create(@Payload() createTemplateDto: CreateTemplateDto) {
+    return await this.templateService.create(createTemplateDto);
+  }
 
-    @Get()
-    @HttpCode(HttpStatus.OK)
-    async getAll() {
-        return await this.templateService.findAll();
-    }
+  @MessagePattern({
+    cmd: EXERCISE_SERVICE_OPTIONS.EXERCISE_TEMPLATE_FIND_ALL,
+  })
+  async getAll() {
+    return await this.templateService.findAll();
+  }
 
-    @Get('topics')
-    @HttpCode(HttpStatus.OK)
-    async getByTopics(@Query('topics') topics: string) {
-        let parsedTopics: number[];
-        parsedTopics = topics.split(',').map(topic => parseInt(topic.trim()));
-        return this.templateService.findByTopics(parsedTopics);
-    }
+  @MessagePattern({
+    cmd: EXERCISE_SERVICE_OPTIONS.EXERCISE_TEMPLATE_FIND_BY_TOPICS_ID,
+  })
+  async getByTopics(@Payload() topics: number[]) {
+    return this.templateService.findByTopics(topics);
+  }
 
-    @Get('/topic/:id')
-    @HttpCode(HttpStatus.OK)
-    async getByTopic(@Param('id') id: number) {
-        return await this.templateService.findByTopic(id);
-    }
+  @MessagePattern({
+    cmd: EXERCISE_SERVICE_OPTIONS.EXERCISE_TEMPLATE_FIND_BY_TOPIC_ID,
+  })
+  async getByTopic(@Payload() id: number) {
+    return await this.templateService.findByTopic(id);
+  }
 
-    @Get(':id')
-    @HttpCode(HttpStatus.OK)
-    async getById(@Param('id') id: number) {
-        return await this.templateService.findOne(id);
-    }
-
+  @MessagePattern({
+    cmd: EXERCISE_SERVICE_OPTIONS.EXERCISE_TEMPLATE_FIND_BY_ID,
+  })
+  async getById(@Payload() id: number) {
+    return await this.templateService.findOne(id);
+  }
 }
