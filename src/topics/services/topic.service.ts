@@ -21,7 +21,7 @@ export class TopicService {
 
   async create(topic: CreateTopicDto): Promise<TopicI> {
     try {
-      const topicReq = new Topic(topic.name, topic.unit_id);
+      const topicReq = new Topic(topic.name);
       const topicSaved = await this._topicRepository.create(topicReq);
       return topicSaved;
     } catch (error) {
