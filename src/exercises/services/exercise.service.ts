@@ -35,9 +35,9 @@ export class ExerciseService {
     }
   }
 
-  async findByPupil(id: number) {
+  async findByPupil(id: number, learningPathId: number) {
     try {
-      const topics = await this.topicService.findByPupil(id);
+      const topics = await this.topicService.findByPupil(id, learningPathId);
 
       const topicIds = topics.map((topic) => topic.id);
 

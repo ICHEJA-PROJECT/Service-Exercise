@@ -50,10 +50,10 @@ export class ResourceService {
     }
   }
 
-  async findByPupil(pupilId: number): Promise<ResourceI[]> {
+  async findByPupil(pupilId: number, learningPathId: number): Promise<ResourceI[]> {
     try {
       console.log(`id pupil: ${pupilId}`);
-      const topics = await this.topicService.findByPupil(pupilId);
+      const topics = await this.topicService.findByPupil(pupilId, learningPathId);
       const topicIds = topics.map((topic) => topic.id);
       const resources = await this.resourceRepository.findByTopics(topicIds);
       return resources;
