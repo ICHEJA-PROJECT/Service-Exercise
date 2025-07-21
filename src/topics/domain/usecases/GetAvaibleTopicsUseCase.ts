@@ -5,14 +5,14 @@ import { TopicSequenceRepositoryImpl } from "src/topics/data/repositories/topic_
 export class GetAvaibleTopicsUseCase {
     constructor(@Inject(TopicSequenceRepositoryImpl) private readonly topicSequenceRepository: TopicSequenceRepository) {}
 
-    async run(completedTopics: number[]): Promise<number[]> {
+    async run(completedTopics: number[], learningPathId: number): Promise<number[]> {
         try {
 
             if (!completedTopics || completedTopics.length === 0) {
                 return [];
             }
-
-            const allSequences = await this.topicSequenceRepository.findAll();
+            
+            const allSequences = await this.topicSequenceRepository.findByLearningPath(learningPathId);
             
             // Construir un mapa para acceso rápido
             const nextTopicsMap = new Map<number, number[]>();
