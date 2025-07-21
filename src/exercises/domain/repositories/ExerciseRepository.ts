@@ -8,4 +8,5 @@ export interface ExerciseRepository {
     findByTemplate(idTemplate: number): Promise<ExerciseI[]>;
     countExercisesByTemplate(exerciseIds: number[]): Promise<any>;
     getPorcentageByIdAndSkill(id: number, skillId: number): Promise<any>;
+    getPorcentagesByExercise(id: number): Promise<any>;
 }

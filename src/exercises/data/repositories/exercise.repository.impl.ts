@@ -1,11 +1,12 @@
 import { ExerciseI } from "src/exercises/domain/entitiesI/ExerciseI";
 import { ExerciseRepository } from "src/exercises/domain/repositories/ExerciseRepository";
 import { CreateExerciseDto } from "../dtos/create-exercise.dto";
-import { Inject, Injectable, InternalServerErrorException, NotFoundException } from "@nestjs/common";
+import { HttpStatus, Inject, Injectable, InternalServerErrorException, NotFoundException } from "@nestjs/common";
 import { ExerciseEntity } from "../entities/exercise.entity";
 import { Repository } from "typeorm";
 import { TemplateEntity } from "src/templates/data/entities/template.entity";
 import { InjectRepository } from "@nestjs/typeorm";
+import { RpcException } from "@nestjs/microservices";
 
 @Injectable()
 export class ExerciseRepositoryImpl implements ExerciseRepository {
@@ -95,6 +96,30 @@ export class ExerciseRepositoryImpl implements ExerciseRepository {
             return result;
         } catch (error) {
             throw new InternalServerErrorException(error);
+        }
+    }
+
+    async getPorcentagesByExercise(id: number): Promise<any> {
+        try {
+            const result = await this.exerciseRepository
+                .createQueryBuilder('e')
+                .select([
+                    'ts.skillId AS skillId',     
+                    'ts.porcentage AS percentage'  
+                ])
+                .innerJoin('e.template', 't')        
+                .innerJoin('t.skills', 'ts')
+                .where('e.id = :id', { id })
+                .getRawMany();
+
+            if(!result) throw new NotFoundException("Datos invalidos, porcentaje no encontrado para el ejercicio y habilidad indicados.");
+            
+            return result;
+        } catch (error) {
+            throw new RpcException({
+                message: error.message,
+                status: HttpStatus.BAD_REQUEST
+            });
         }
     }
 }

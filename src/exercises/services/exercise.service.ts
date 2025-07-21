@@ -1,4 +1,4 @@
-import { Inject, Injectable, InternalServerErrorException } from "@nestjs/common";
+import { HttpStatus, Inject, Injectable, InternalServerErrorException } from "@nestjs/common";
 import { ExerciseRepositoryImpl } from "../data/repositories/exercise.repository.impl";
 import { ExerciseRepository } from "../domain/repositories/ExerciseRepository";
 import { TopicService } from "src/topics/services/topic.service";
@@ -137,6 +137,18 @@ export class ExerciseService {
             return exercise.porcentage;
         } catch (error) {
             throw new InternalServerErrorException(error);
+        }
+    }
+
+    async getPorcentagesByExercise(id: number) {
+        try {
+            const results = await this.exerciseRepository.getPorcentagesByExercise(id);
+            return results;
+        } catch (error) {
+            throw new RpcException({
+                message: error.message,
+                status: HttpStatus.BAD_REQUEST
+            });
         }
     }
 }
