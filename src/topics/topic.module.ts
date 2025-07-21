@@ -19,6 +19,10 @@ import { TopicResourceRepositoryImpl } from './data/repositories/topic_resource.
 import { TopicResourceService } from './services/topic_resource.service';
 import { TopicResourceController } from './controllers/topic_resource.controller';
 import { ExercisesRecordTransport } from 'src/shared/transports/exercises-record.transport';
+import { LearningPathEntity } from './data/entities/learning_path.entity';
+import { LearningPathRepositoryImpl } from './data/repositories/learning_path.repository.impl';
+import { LearningPathService } from './services/learning_path.service';
+import { LearningPathController } from './controllers/learning_path.controller';
 
 @Module({
   imports: [
@@ -26,12 +30,14 @@ import { ExercisesRecordTransport } from 'src/shared/transports/exercises-record
       ResourceEntity,
       LayoutEntity,
       TopicEntity,
+      LearningPathEntity,
       TopicSequenceEntity,
       TopicResourceEntity,
     ]),
     ExercisesRecordTransport,
   ],
   providers: [
+    LearningPathRepositoryImpl,
     TopicSequenceRepositoryImpl,
     TopicRepositoryImpl,
     GetAvaibleTopicsUseCase,
@@ -39,12 +45,14 @@ import { ExercisesRecordTransport } from 'src/shared/transports/exercises-record
     ResourceRepositoryImpl,
     TopicResourceRepositoryImpl,
     ResourceService,
+    LearningPathService,
     TopicSequenceService,
     TopicResourceService,
   ],
   controllers: [
     TopicController,
     ResourceController,
+    LearningPathController,
     TopicSequenceController,
     TopicResourceController,
   ],
