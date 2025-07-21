@@ -24,7 +24,7 @@ export class ExerciseController {
   }
 
   @MessagePattern({ cmd: EXERCISE_SERVICE_OPTIONS.EXERCISE_FIND_BY_PUPIL_ID })
-  async findByPupil(@Payload() id: number, @Payload() learningPathId: number) {
+  async findByPupil(@Payload() { id, learningPathId }: { id: number, learningPathId: number }) {
     return await this.exerciseService.findByPupil(id, learningPathId);
   }
 

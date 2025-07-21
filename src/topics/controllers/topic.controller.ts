@@ -16,7 +16,7 @@ export class TopicController {
   @MessagePattern({
     cmd: EXERCISE_SERVICE_OPTIONS.EXERCISE_TOPIC_FIND_BY_PUPIL,
   })
-  async getTopicsByPupil(@Payload() id: number, @Payload() learningPathId: number) {
+  async getTopicsByPupil(@Payload() { id, learningPathId }: { id: number, learningPathId: number }) {
     return await this.topicService.findByPupil(id, learningPathId);
   }
 
