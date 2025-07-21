@@ -24,10 +24,10 @@ export class ExerciseController {
         return await this.exerciseService.getPorcentageByIdAndSkill(parseInt(id), parseInt(skillId));
     }
 
-    @Get('pupil/:id')
+    @Get('pupil/:id/learning-path')
     @HttpCode(HttpStatus.OK)
-    async findByPupil(@Param('id') id: number) {
-        return await this.exerciseService.findByPupil(id);
+    async findByPupil(@Param('id') id: number, @Query('learningPathId') learningPathId: number) {
+        return await this.exerciseService.findByPupil(id, learningPathId);
     }
 
     @Get('/:id')

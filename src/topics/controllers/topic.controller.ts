@@ -1,4 +1,4 @@
-import { Body, Controller, Get, HttpCode, HttpStatus, Param, Post } from "@nestjs/common";
+import { Body, Controller, Get, HttpCode, HttpStatus, Param, Post, Query } from "@nestjs/common";
 import { TopicService } from "../services/topic.service";
 import { CreateTopicDto } from "../data/dtos/create-topic.dto";
 
@@ -12,10 +12,10 @@ export class TopicController {
         return await this.topicService.findAll();
     }
 
-    @Get('pupils/:id')
+    @Get('pupils/:id/learning-path')
     @HttpCode(HttpStatus.OK)
-    async getTopicsByPupil(@Param('id') id: number) {
-        return await this.topicService.findByPupil(id);
+    async getTopicsByPupil(@Param('id') id: number, @Query("learningPathId") learningPathId: number) {
+        return await this.topicService.findByPupil(id, learningPathId);
     }
 
     @Post()

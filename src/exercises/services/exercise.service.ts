@@ -31,9 +31,9 @@ export class ExerciseService {
     }
 
 
-    async findByPupil(id: number) {
+    async findByPupil(id: number, learningPathId: number) {
         try {
-            const topics = await this.topicService.findByPupil(id);
+            const topics = await this.topicService.findByPupil(id, learningPathId);
 
             const topicIds = topics.map(topic => topic.id);
 
@@ -66,7 +66,17 @@ export class ExerciseService {
 
             const pupilExerciseIds = pupilExercisesResponse.data;
 
-            const countExercisesByTemplate = await this.exerciseRepository.countExercisesByTemplate(pupilExerciseIds);
+            console.log(pupilExerciseIds);
+
+            let countExercisesByTemplate = []
+
+            if(!pupilExerciseIds || pupilExerciseIds.lenght === 0) {
+
+                countExercisesByTemplate = await this.exerciseRepository.countExercisesByTemplate(pupilExerciseIds);
+
+            } 
+
+            console.log(countExercisesByTemplate);
 
             // Aquí realizar consulta al servicio que contenga Educando-Estadisticas
             const pupilGradesResponse = await firstValueFrom(

@@ -1,4 +1,4 @@
-import { Body, Controller, Get, HttpCode, HttpStatus, Param, Post } from "@nestjs/common";
+import { Body, Controller, Get, HttpCode, HttpStatus, Param, Post, Query } from "@nestjs/common";
 import { ResourceService } from "../services/resource.service";
 import { CreateResourceDto } from "../data/dtos/create-resource.dto";
 
@@ -12,10 +12,10 @@ export class ResourceController {
         return await this.resourceService.findAll();
     }
 
-    @Get('pupils/:id')
+    @Get('pupils/:id/learning-path')
     @HttpCode(HttpStatus.OK)
-    async getByPupil(@Param('id') id: number) {
-        return await this.resourceService.findByPupil(id);
+    async getByPupil(@Param('id') id: number, @Query('learningPathId') learningPathId: number) {
+        return await this.resourceService.findByPupil(id, learningPathId);
     }
     
     @Get('topic/:id')
