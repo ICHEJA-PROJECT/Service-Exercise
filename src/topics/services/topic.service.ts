@@ -19,7 +19,7 @@ export class TopicService {
 
     async create(topic: CreateTopicDto): Promise<TopicI> {
         try {
-            const topicReq = new Topic(topic.name, topic.unit_id);
+            const topicReq = new Topic(topic.name);
             const topicSaved = await this._topicRepository.create(topicReq)
             return topicSaved;
         } catch (error) {
@@ -36,7 +36,7 @@ export class TopicService {
         }
     }
 
-    async findByPupil(idPupil: number): Promise<TopicI[]> {
+    async findByPupil(idPupil: number, learningPathId: number): Promise<TopicI[]> {
         try {
             
             // Consultar al servicio que contiene la tabla Educando-Temas para obtener los ids de los temas que ya ha completado.
@@ -57,7 +57,7 @@ export class TopicService {
             const completedTopics = pupilTopicsResponse.data;
 
             // Aquí implementar lógica de grafo dirigido para encontrar temas permitidos.
-            const idTopics = await this.getAvaibleTopicsUseCase.run(completedTopics);
+            const idTopics = await this.getAvaibleTopicsUseCase.run(completedTopics, learningPathId);
 
             const avaibleTopics = await this._topicRepository.findByIds(idTopics);
 
