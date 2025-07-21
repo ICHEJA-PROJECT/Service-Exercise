@@ -16,6 +16,6 @@ export class ResourceEntity implements ResourceI {
     @ManyToMany(() => TopicEntity, topic => topic.resources)
     topics: TopicI[];
     @ManyToOne(() => LayoutEntity, layout => layout.resources)
-    @JoinColumn({name: "id_Layout"})
+    @JoinColumn({name: "id_layout"})
     layout: LayoutI;
 }
