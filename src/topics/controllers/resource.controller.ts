@@ -18,8 +18,8 @@ export class ResourceController {
   @MessagePattern({
     cmd: EXERCISE_SERVICE_OPTIONS.EXERCISE_RESOURCE_FIND_BY_PUPIL,
   })
-  async getByPupil(@Payload() id: number) {
-    return await this.resourceService.findByPupil(id);
+  async getByPupil(@Payload() { id, learningPathId }: { id: number, learningPathId: number}) {
+    return await this.resourceService.findByPupil(id, learningPathId);
   }
 
   @MessagePattern({

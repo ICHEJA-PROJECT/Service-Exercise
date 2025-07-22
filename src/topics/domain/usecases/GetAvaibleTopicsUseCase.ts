@@ -1,18 +1,20 @@
-import { Inject, InternalServerErrorException } from "@nestjs/common";
+import { HttpStatus, Inject, Injectable, InternalServerErrorException } from "@nestjs/common";
 import { TopicSequenceRepository } from "../repositories/TopicSequenceRepository";
 import { TopicSequenceRepositoryImpl } from "src/topics/data/repositories/topic_sequence.repository.impl";
+import { RpcException } from "@nestjs/microservices";
 
+@Injectable()
 export class GetAvaibleTopicsUseCase {
     constructor(@Inject(TopicSequenceRepositoryImpl) private readonly topicSequenceRepository: TopicSequenceRepository) {}
 
-    async run(completedTopics: number[]): Promise<number[]> {
+    async run(completedTopics: number[], learningPathId: number): Promise<number[]> {
         try {
 
             if (!completedTopics || completedTopics.length === 0) {
                 return [];
             }
-
-            const allSequences = await this.topicSequenceRepository.findAll();
+            
+            const allSequences = await this.topicSequenceRepository.findByLearningPath(learningPathId);
             
             // Construir un mapa para acceso rápido
             const nextTopicsMap = new Map<number, number[]>();
@@ -78,7 +80,10 @@ export class GetAvaibleTopicsUseCase {
 
             return newAccessibleTopics.sort((a, b) => a - b);
         } catch (error) {
-            throw new InternalServerErrorException(error);
+            throw new RpcException({
+                message: error.message,
+                status: HttpStatus.BAD_REQUEST
+            });
         }
     }
 }

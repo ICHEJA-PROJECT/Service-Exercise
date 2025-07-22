@@ -45,6 +45,11 @@ export const EXERCISE_SERVICE_OPTIONS = {
   EXERCISE_TOPIC_RESOURCE_CREATE: 'exercise.topicResource.create',
   EXERCISE_TOPIC_RESOURCE_FIND_ALL: 'exercise.topicResource.findAll',
 
+  //! ---------------- Exercise learning path resource controllers ----------------
+  EXERCISE_LEARNING_PATH_CREATE: 'exercise.learningPath.create',
+  EXERCISE_LEARNING_PATH_FIND_ALL: 'exercise.learningPath.findAll',
+  EXERCISE_LEARNING_PATH_FIND_BY_ID: 'exercise.learningPath.findById',
+
   //! ---------------- Exercise topic sequence controllers ----------------
   EXERCISE_TOPIC_SEQUENCE_CREATE: 'exercise.topicSequence.create',
   EXERCISE_TOPIC_SEQUENCE_FIND_ALL: 'exercise.topicSequence.findAll',

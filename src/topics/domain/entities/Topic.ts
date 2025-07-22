@@ -1,9 +1,7 @@
 export class Topic {
     name: string;
-    unit_id: number;
 
-    constructor(name: string, unit_id: number) {
+    constructor(name: string) {
         this.name = name;
-        this.unit_id = unit_id;
     }
 }

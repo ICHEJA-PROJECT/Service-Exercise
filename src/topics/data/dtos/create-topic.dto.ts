@@ -5,7 +5,4 @@ export class CreateTopicDto {
     @ApiProperty({ description: 'Name of topic'})
     @IsString()
     name: string;
-    @ApiProperty({ description: 'id of unit who belong'})
-    @IsNumber()
-    unit_id: number;
 }
