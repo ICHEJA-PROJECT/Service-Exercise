@@ -32,4 +32,10 @@ export class ExerciseController {
   async findOne(@Payload() id: number) {
     return await this.exerciseService.findOne(id);
   }
+
+  @MessagePattern({ cmd: EXERCISE_SERVICE_OPTIONS.EXERCISE_PERCENTAGES_BY_ID })
+  async getPorcentages(@Payload() id: number) {
+    return await this.exerciseService.getPorcentages(id);
+  }
+  
 }

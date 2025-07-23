@@ -171,4 +171,16 @@ export class ExerciseService {
       });
     }
   }
+
+  async getPorcentages(id: number) {
+    try {
+      const porcentages = await this.exerciseRepository.getPorcentages(id);
+      return porcentages;
+    } catch (error) {
+      throw new RpcException({
+        status: HttpStatus.BAD_REQUEST,
+        message: error.message,
+      });
+    }
+  }
 }
