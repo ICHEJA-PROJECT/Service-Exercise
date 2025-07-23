@@ -145,4 +145,27 @@ export class ExerciseRepositoryImpl implements ExerciseRepository {
       });
     }
   }
+
+  async getPorcentages(id: number): Promise<any> {
+    try {
+      
+      const result = await this.exerciseRepository
+        .createQueryBuilder('e')
+        .select([
+          'ts.skillId AS skillId',
+          'ts.porcentage AS percentage'
+            ])
+            .innerJoin('e.template', 't')        
+            .innerJoin('t.skills', 'ts')
+            .where('e.id = :id', { id })
+            .getRawMany();
+
+        return result;
+    } catch (error) {
+        throw new RpcException({
+            message: error.message,
+            status: HttpStatus.BAD_REQUEST
+        });
+    }
+  }
 }
