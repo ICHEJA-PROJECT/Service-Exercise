@@ -11,4 +11,5 @@ export const envsValidator = Joi.object<EnvsI>({
     BROKER_HOSTS: Joi.array().items(Joi.string()).required().description("Hosts of the message broker"),
     UPLOAD_FILES_SERVICE_URL: Joi.string().required(),
     PUPIL_RECORDS_SERVICE_URL: Joi.string().required(),
+    PREFERENCES_SERVICE_URL: Joi.string().required()
 }).unknown(true);

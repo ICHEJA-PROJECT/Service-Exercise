@@ -24,9 +24,9 @@ export class TopicController {
         return await this.topicService.create(createTopicDto);
     }
 
-    @Get('/:id')
+    @Get('/:id/learning-paths')
     @HttpCode(HttpStatus.OK)
-    async getTopic(@Param('id') id: number) {
-        return await this.topicService.findOne(id);
+    async getTopic(@Param('id') id: number, @Query('learningPathId') learningPathId: number) {
+        return await this.topicService.findOne(id, learningPathId);
     }
 }

@@ -11,6 +11,7 @@ import { ExerciseService } from "./services/exercise.service";
 import { TopicModule } from "src/topics/topic.module";
 import { TemplateModule } from "src/templates/template.module";
 import { GetPupilRecordsTransport } from "./transports/get-pupil-records.transport";
+import { GetPreferencesTransport } from "../shared/transports/get-preferences.transport";
 
 @Module({
     imports: [
@@ -20,7 +21,8 @@ import { GetPupilRecordsTransport } from "./transports/get-pupil-records.transpo
         ]), 
         TopicModule, 
         TemplateModule,
-        GetPupilRecordsTransport
+        GetPupilRecordsTransport,
+        GetPreferencesTransport,
     ],
     providers: [ExerciseRepositoryImpl, ExerciseService],
     controllers: [ExerciseController]

@@ -8,4 +8,5 @@ export interface EnvsI {
     BROKER_HOSTS: string[];
     UPLOAD_FILES_SERVICE_URL: string;
     PUPIL_RECORDS_SERVICE_URL: string;
+    PREFERENCES_SERVICE_URL: string;
 }

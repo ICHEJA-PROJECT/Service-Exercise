@@ -1,11 +1,12 @@
 import { ResourceI } from "src/topics/domain/entititesI/ResourceI";
 import { ResourceRepository } from "src/topics/domain/repositories/ResourceRepository";
 import { ResourceEntity } from "../entities/resource.entity";
-import { Injectable, InternalServerErrorException, NotFoundException } from "@nestjs/common";
+import { HttpStatus, Injectable, InternalServerErrorException, NotFoundException } from "@nestjs/common";
 import { In, Repository } from "typeorm";
 import { CreateResourceDto } from "../dtos/create-resource.dto";
 import { LayoutEntity } from "src/layouts/data/entities/layout.entity";
 import { InjectRepository } from "@nestjs/typeorm";
+import { RpcException } from "@nestjs/microservices";
 
 @Injectable()
 export class ResourceRepositoryImpl implements ResourceRepository {
@@ -68,6 +69,17 @@ export class ResourceRepositoryImpl implements ResourceRepository {
             return resources;
         } catch (error) {
             throw new InternalServerErrorException(error);
+        }
+    }
+
+    async findByIds(ids: number[]): Promise<ResourceI[]> {
+        try {
+            return await this.resourceRepository.find({where:{id: In(ids)}, relations: {layout: true}});
+        } catch (error) {
+            throw new RpcException({
+                message: error.message,
+                status: HttpStatus.BAD_REQUEST
+            });
         }
     }
 

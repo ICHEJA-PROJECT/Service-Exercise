@@ -7,4 +7,5 @@ export interface ResourceRepository {
     findAll(): Promise<ResourceI[]>;
     findByTopic(idTopic: number): Promise<ResourceI[]>;
     findByTopics(idTopics: number[]): Promise<ResourceI[]>;
+    findByIds(ids: number[]): Promise<ResourceI[]>;
 }

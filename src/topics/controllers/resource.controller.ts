@@ -18,10 +18,10 @@ export class ResourceController {
         return await this.resourceService.findByPupil(id, learningPathId);
     }
     
-    @Get('topic/:id')
+    @Get('topic/:id/learning-path')
     @HttpCode(HttpStatus.OK)
-    async getByTopic(@Param('id') id: number) {
-        return await this.resourceService.findByTopic(id);
+    async getByTopic(@Param('id') id: number, @Query('learningPathId') learningPathId: number) {
+        return await this.resourceService.findByTopic(id, learningPathId);
     }
 
     @Get(':id')

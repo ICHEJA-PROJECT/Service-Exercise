@@ -8,13 +8,15 @@ import { TopicRepositoryImpl } from "../data/repositories/topic.repository.impl"
 import { HttpService } from "@nestjs/axios";
 import { catchError, firstValueFrom } from "rxjs";
 import { RpcException } from "@nestjs/microservices";
+import { PreferencesService } from "src/shared/transports/services/preferences.service";
 
 @Injectable()
 export class TopicService {
     constructor(
         @Inject(TopicRepositoryImpl) private readonly _topicRepository: TopicRepository, 
         private readonly getAvaibleTopicsUseCase: GetAvaibleTopicsUseCase,
-        private readonly httpService: HttpService
+        private readonly httpService: HttpService,
+        private readonly preferencesService: PreferencesService
     ) {}
 
     async create(topic: CreateTopicDto): Promise<TopicI> {
@@ -27,9 +29,15 @@ export class TopicService {
         }
     }
 
-    async findOne(id: number): Promise<TopicI> {
+    async findOne(id: number, learningPathId: number): Promise<TopicI> {
         try {
             const topic = await this._topicRepository.findOne(id);
+
+            const templateIds = topic.templates.map((template)  => template.id);
+            const templatesImpairmentsRes = await this.preferencesService.getReactivesImpairments(learningPathId);
+            const templatesImpairmentsIds = templatesImpairmentsRes.data;
+            console.log(templatesImpairmentsIds);
+
             return topic;
         } catch (error) {
             throw new InternalServerErrorException(error);

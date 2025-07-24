@@ -23,6 +23,7 @@ import { LearningPathEntity } from "./data/entities/learning_path.entity";
 import { LearningPathRepositoryImpl } from "./data/repositories/learning_path.repository.impl";
 import { LearningPathService } from "./services/learning_path.service";
 import { LearningPathController } from "./controllers/learning_path.controller";
+import { GetPreferencesTransport } from "src/shared/transports/get-preferences.transport";
 
 @Module({
     imports: [
@@ -34,7 +35,8 @@ import { LearningPathController } from "./controllers/learning_path.controller";
             TopicSequenceEntity,
             TopicResourceEntity 
         ]),
-        GetPupilTopicsTransport
+        GetPupilTopicsTransport,
+        GetPreferencesTransport
     ],
     providers: [
         LearningPathRepositoryImpl,

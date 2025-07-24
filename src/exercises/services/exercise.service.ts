@@ -9,6 +9,8 @@ import { TemplateSkillService } from "src/templates/services/template_skill.serv
 import { catchError, firstValueFrom } from "rxjs";
 import { HttpService } from "@nestjs/axios";
 import { RpcException } from "@nestjs/microservices";
+import { PreferencesService } from "../../shared/transports/services/preferences.service";
+import { filterGroups } from "src/shared/utils/filter-groups";
 
 Injectable()
 export class ExerciseService {
@@ -18,7 +20,8 @@ export class ExerciseService {
         private readonly templateService: TemplateService,
         private readonly skillService: SkillService,
         private readonly templateSkillService: TemplateSkillService,
-        private readonly httpService: HttpService
+        private readonly recordsService: HttpService,
+        private readonly preferencesService: PreferencesService
     ) {}
 
     async create(createExerciseDto: CreateExerciseDto) {
@@ -33,25 +36,26 @@ export class ExerciseService {
 
     async findByPupil(id: number, learningPathId: number) {
         try {
-            const topics = await this.topicService.findByPupil(id, learningPathId);
 
+            const topics = await this.topicService.findByPupil(id, learningPathId);
             const topicIds = topics.map(topic => topic.id);
 
             const templates = await this.templateService.findByTopics(topicIds);
-
             const templateIds = templates.map(template => template.id);
 
-            const templateSkills = await this.templateSkillService.findManyByTemplates(templateIds);
+            const templatesImpairmentsRes = await this.preferencesService.getReactivesImpairments(learningPathId);
+            const templatesImpairmenstIds = templatesImpairmentsRes.data;
+            
+            const templateIdsFiltered = filterGroups(templateIds, templatesImpairmenstIds);
+
+            const templateSkills = await this.templateSkillService.findManyByTemplates(templateIdsFiltered);
 
             const skills = await this.skillService.findByTemplates(templateIds);
-
             const skillIds = skills.map((skill) => skill.id);
-            
             const skillIdsString = skillIds.join(',');
-
             // Aquí realizar consulta al servicio que contenga Educando-Historial
             const pupilExercisesResponse = await firstValueFrom(
-                this.httpService.get(`/pupil-exercises/pupils/${id}/ids`)
+                this.recordsService.get(`/pupil-exercises/pupils/${id}/ids`)
                 .pipe(
                     catchError((error) => {
                         console.log('Error en la peticion:', error);
@@ -65,22 +69,22 @@ export class ExerciseService {
             )
 
             const pupilExerciseIds = pupilExercisesResponse.data;
-
+            console.log("PupilExercises");
             console.log(pupilExerciseIds);
 
             let countExercisesByTemplate = []
 
-            if(!pupilExerciseIds || pupilExerciseIds.lenght === 0) {
-
+            if(pupilExerciseIds || pupilExerciseIds.lenght !== 0) {
                 countExercisesByTemplate = await this.exerciseRepository.countExercisesByTemplate(pupilExerciseIds);
 
             } 
 
+            console.log("CountExercises");
             console.log(countExercisesByTemplate);
 
             // Aquí realizar consulta al servicio que contenga Educando-Estadisticas
             const pupilGradesResponse = await firstValueFrom(
-                this.httpService.get(`/pupil-skills/grades/skills?pupilId=${id}&skills=${skillIdsString}`)
+                this.recordsService.get(`/pupil-skills/grades/skills?pupilId=${id}&skills=${skillIdsString}`)
                     .pipe(
                         catchError((error) => {
                             console.log('Error en la petición:', error);
@@ -107,7 +111,17 @@ export class ExerciseService {
             // Conteo: Consultar al servicio educando_ejercicios para traer que ejercicios a hecho;
             // Calificaciones: Consultar al caso de uso del educando_ejercicio_habilidades Parametros(skills);
 
-            return [];
+
+            // Buscar los ejercicios por reactivos.
+
+            const exercisesIds = await this.exerciseRepository.findByTemplatesOnlyIds(templateIds);
+            const exercisesPreferencesRes = await this.preferencesService.getPreferencesByStudent(id);
+            const exercisesPreferencesIds = exercisesPreferencesRes.data;
+
+            const exercisesIdsFilteredIds = filterGroups(exercisesIds, exercisesPreferencesIds);
+            const exercises = await this.exerciseRepository.findByIds(exercisesIdsFilteredIds);
+            
+            return exercises;
         } catch (error) {
             throw new InternalServerErrorException(error);
         }
