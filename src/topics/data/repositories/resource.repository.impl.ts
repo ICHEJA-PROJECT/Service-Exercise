@@ -103,4 +103,16 @@ export class ResourceRepositoryImpl implements ResourceRepository {
       });
     }
   }
+
+  async findByIds(ids: number[]): Promise<ResourceI[]> {
+      try {
+          return await this.resourceRepository.find({where:{id: In(ids)}, relations: {layout: true}});
+      } catch (error) {
+          throw new RpcException({
+              message: error.message,
+              status: HttpStatus.BAD_REQUEST
+          });
+      }
+  }
+  
 }

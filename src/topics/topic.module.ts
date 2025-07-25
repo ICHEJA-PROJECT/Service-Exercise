@@ -23,6 +23,8 @@ import { LearningPathEntity } from './data/entities/learning_path.entity';
 import { LearningPathRepositoryImpl } from './data/repositories/learning_path.repository.impl';
 import { LearningPathService } from './services/learning_path.service';
 import { LearningPathController } from './controllers/learning_path.controller';
+import { PreferencesTransport } from 'src/shared/transports/preferences.transport';
+import { TemplateModule } from 'src/templates/template.module';
 
 @Module({
   imports: [
@@ -34,7 +36,9 @@ import { LearningPathController } from './controllers/learning_path.controller';
       TopicSequenceEntity,
       TopicResourceEntity,
     ]),
+    TemplateModule,
     ExercisesRecordTransport,
+    PreferencesTransport,
   ],
   providers: [
     LearningPathRepositoryImpl,
