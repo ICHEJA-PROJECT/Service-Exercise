@@ -124,4 +124,16 @@ export class TemplateRepositoryImpl implements TemplateRepository {
       });
     }
   }
+
+  async findByIds(ids: number[]): Promise<TemplateI[]> {
+      try {
+        const templates = await this.templateRepository.find({where:{id: In(ids)}});
+        return templates;
+      } catch (error) {
+        throw new RpcException({
+          status: HttpStatus.BAD_REQUEST,
+          message: error.message,
+        });
+      }
+  }
 }

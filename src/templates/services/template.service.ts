@@ -71,4 +71,16 @@ export class TemplateService {
       });
     }
   }
+
+  async findByIds(ids: number[]) {
+        try {
+      const templates = await this.templateRepository.findByIds(ids);
+      return templates;
+    } catch (error) {
+      throw new RpcException({
+        status: HttpStatus.BAD_REQUEST,
+        message: error.message,
+      });
+    }
+  }
 }

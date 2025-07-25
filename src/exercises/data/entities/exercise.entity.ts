@@ -7,7 +7,7 @@ import { Column, Entity, JoinColumn, ManyToMany, ManyToOne, OneToMany, PrimaryGe
 export class ExerciseEntity implements ExerciseI {
     @PrimaryGeneratedColumn('increment', {name: "id_ejercicio"})
     id: number;
-    @Column({ name: "contexto", nullable: false, type: "json"})
+    @Column({ name: "contexto", nullable: false, type: "jsonb"})
     context: object;
     @ManyToOne(() => TemplateEntity, template => template.exercises)
     @JoinColumn({ name: "id_reactivo"})

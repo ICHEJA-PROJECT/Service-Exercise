@@ -3,7 +3,7 @@ import { ExerciseRepository } from 'src/exercises/domain/repositories/ExerciseRe
 import { CreateExerciseDto } from '../dtos/create-exercise.dto';
 import { HttpStatus, Injectable } from '@nestjs/common';
 import { ExerciseEntity } from '../entities/exercise.entity';
-import { Repository } from 'typeorm';
+import { In, Repository } from 'typeorm';
 import { TemplateEntity } from 'src/templates/data/entities/template.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { RpcException } from '@nestjs/microservices';
@@ -168,4 +168,27 @@ export class ExerciseRepositoryImpl implements ExerciseRepository {
         });
     }
   }
+
+  async findByIds(ids: number[]): Promise<ExerciseI[]> {
+        try {
+            return await this.exerciseRepository.find({where:{id: In(ids)}, relations: {template: {layout: true}}});
+        } catch (error) {
+            throw new RpcException({
+                message: error.message,
+                status: HttpStatus.BAD_REQUEST,
+            });
+        }
+    }
+
+    async findByTemplatesOnlyIds(templatesIds: number[]): Promise<number[]> {
+        try {
+            return await this.exerciseRepository.find({where:{template: {id: In(templatesIds)}}})
+                .then(exercises => exercises.map(exercise => exercise.id));
+        } catch (error) {
+            throw new RpcException({
+                message: error.message,
+                status: HttpStatus.BAD_REQUEST,
+            });
+        }
+    }
 }

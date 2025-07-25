@@ -9,6 +9,8 @@ import { TemplateSkillService } from 'src/templates/services/template_skill.serv
 import { catchError, firstValueFrom } from 'rxjs';
 import { ClientProxy, RpcException } from '@nestjs/microservices';
 import { RECORD_SERVICE_OPTIONS } from 'src/shared/constants/record_service_options';
+import { PREFERENCES_SERVICE_OPTIONS } from 'src/shared/constants/preferences_service_options';
+import { filterGroups } from 'src/shared/utils/filter-groups';
 
 @Injectable()
 export class ExerciseService {
@@ -21,6 +23,8 @@ export class ExerciseService {
     private readonly templateSkillService: TemplateSkillService,
     @Inject(RECORD_SERVICE_OPTIONS.RECORD_SERVICE_NAME)
     private readonly client: ClientProxy,
+    @Inject(PREFERENCES_SERVICE_OPTIONS.PREFERENCES_SERVICE_NAME)
+    private readonly preferencesClient: ClientProxy
   ) {}
 
   async create(createExerciseDto: CreateExerciseDto) {
@@ -45,8 +49,30 @@ export class ExerciseService {
 
       const templateIds = templates.map((template) => template.id);
 
+      const templatesImpairmentsRes = await firstValueFrom(
+        this.preferencesClient
+        .send(
+          { cmd: PREFERENCES_SERVICE_OPTIONS.REACTIVE_IMPAIRMENT_FIND_BY_LEARNING_PATH
+
+          }, 
+          {
+            id: learningPathId
+          }
+        )
+        .pipe(catchError(error => {
+          throw new RpcException({
+            message: error.message,
+            status: HttpStatus.BAD_REQUEST,
+          });
+        }))
+      );
+
+      const templatesImpairmentsIds = templatesImpairmentsRes.data;
+
+      const templatesIdsFiltered = filterGroups(templateIds, templatesImpairmentsIds);
+
       const templateSkills =
-        await this.templateSkillService.findManyByTemplates(templateIds);
+        await this.templateSkillService.findManyByTemplates(templatesIdsFiltered);
 
       const skills = await this.skillService.findByTemplates(templateIds);
 
@@ -123,7 +149,26 @@ export class ExerciseService {
       // Conteo: Consultar al servicio educando_ejercicios para traer que ejercicios a hecho;
       // Calificaciones: Consultar al caso de uso del educando_ejercicio_habilidades Parametros(skills);
 
-      return [];
+      const exercisesIds = await this.exerciseRepository.findByTemplatesOnlyIds(templateIds);
+
+      const exercisesPreferencesRes = await firstValueFrom(
+        this.preferencesClient
+          .send(
+            { cmd: PREFERENCES_SERVICE_OPTIONS.PREFERENCES_FIND_BY_STUDENT }, 
+            { id: id }
+          ).pipe(catchError(error => {
+            throw new RpcException({
+              message: error.message,
+              status: HttpStatus.BAD_REQUEST,
+            });
+          }))
+      );
+
+      const exercisesIdsFiltered = filterGroups(exercisesIds, exercisesPreferencesRes);
+
+      const exercises = await this.exerciseRepository.findByIds(exercisesIdsFiltered);
+
+      return exercises;
     } catch (error) {
       throw new RpcException({
         status: HttpStatus.BAD_REQUEST,

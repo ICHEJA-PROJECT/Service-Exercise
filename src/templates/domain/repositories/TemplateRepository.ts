@@ -7,4 +7,5 @@ export interface TemplateRepository {
     findByTopic(topicId: number): Promise<TemplateI[]>;
     findAll(): Promise<TemplateI[]>;
     findOne(id: number): Promise<TemplateI>;
+    findByIds(ids: number[]): Promise<TemplateI[]>;
 }
