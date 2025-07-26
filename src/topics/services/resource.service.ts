@@ -4,7 +4,10 @@ import { ResourceRepository } from '../domain/repositories/ResourceRepository';
 import { ResourceI } from '../domain/entititesI/ResourceI';
 import { ResourceRepositoryImpl } from '../data/repositories/resource.repository.impl';
 import { CreateResourceDto } from '../data/dtos/create-resource.dto';
-import { RpcException } from '@nestjs/microservices';
+import { ClientProxy, RpcException } from '@nestjs/microservices';
+import { catchError, firstValueFrom } from 'rxjs';
+import { PREFERENCES_SERVICE_OPTIONS } from 'src/shared/constants/preferences_service_options';
+import { filterGroups } from 'src/shared/utils/filter-groups';
 
 @Injectable()
 export class ResourceService {
@@ -12,6 +15,8 @@ export class ResourceService {
     private readonly topicService: TopicService,
     @Inject(ResourceRepositoryImpl)
     private readonly resourceRepository: ResourceRepository,
+    @Inject(PREFERENCES_SERVICE_OPTIONS.PREFERENCES_SERVICE_NAME)
+    private readonly preferencesClient: ClientProxy
   ) {}
 
   async create(createResourceDto: CreateResourceDto) {
@@ -41,7 +46,12 @@ export class ResourceService {
   async findOne(id: number) {
     try {
       const resource = await this.resourceRepository.findOne(id);
-      return resource;
+      return {
+        id: resource.id,
+        title: resource.title,
+        layout: resource.layout.name,
+        content: resource.content
+      };
     } catch (error) {
       throw new RpcException({
         status: HttpStatus.BAD_REQUEST,
@@ -50,13 +60,32 @@ export class ResourceService {
     }
   }
 
-  async findByPupil(pupilId: number): Promise<ResourceI[]> {
+  async findByPupil(pupilId: number, learningPathId: number): Promise<ResourceI[]> {
     try {
-      console.log(`id pupil: ${pupilId}`);
-      const topics = await this.topicService.findByPupil(pupilId);
+      const topics = await this.topicService.findByPupil(pupilId, learningPathId);
       const topicIds = topics.map((topic) => topic.id);
       const resources = await this.resourceRepository.findByTopics(topicIds);
-      return resources;
+      const resourcesIds = resources.map(resource => resource.id);
+      const resourcesImpairmentsRes = await firstValueFrom(
+        this.preferencesClient
+          .send (
+            { cmd: PREFERENCES_SERVICE_OPTIONS.RESOURCE_IMPAIRMENT_FIND_BY_LEARNING_PATH },
+            {
+              id: learningPathId
+            }
+          )
+          .pipe(catchError(error => {
+            throw new RpcException({
+              message: error.message,
+              status: HttpStatus.BAD_REQUEST,
+            });
+          }))
+      );
+      const resourcesImpairmentsIds = resourcesImpairmentsRes;
+      const resourcesIdsFiltered = filterGroups(resourcesIds, resourcesImpairmentsIds);
+      const resourcesFiltered = await this.findByIds(resourcesIdsFiltered);
+
+      return resourcesFiltered;
     } catch (error) {
       throw new RpcException({
         status: HttpStatus.BAD_REQUEST,
@@ -65,10 +94,32 @@ export class ResourceService {
     }
   }
 
-  async findByTopic(topicId: number) {
+  async findByTopic(topicId: number, learningPathId: number) {
     try {
       const resources = await this.resourceRepository.findByTopic(topicId);
-      return resources;
+      const resourcesIds = resources.map(resource => resource.id);
+
+      const resourcesImpairmentRes = await firstValueFrom(
+        this.preferencesClient
+          .send(
+            { cmd: PREFERENCES_SERVICE_OPTIONS.RESOURCE_IMPAIRMENT_FIND_BY_LEARNING_PATH }, 
+            { id: learningPathId }
+          )
+          .pipe(catchError(error => {
+            throw new RpcException({
+              message: error.message,
+              status: HttpStatus.BAD_REQUEST
+            });
+          }))
+      );
+
+      const resourcesImpairmentsIds = resourcesImpairmentRes;
+
+      const resourcesIdsFiltered = filterGroups(resourcesIds, resourcesImpairmentsIds);
+
+      const resourcesFiltered = await this.findByIds(resourcesIdsFiltered);
+
+      return resourcesFiltered;
     } catch (error) {
       throw new RpcException({
         status: HttpStatus.BAD_REQUEST,
@@ -76,4 +127,16 @@ export class ResourceService {
       });
     }
   }
+
+  async findByIds(ids: number[]) {
+      try {
+          return await this.resourceRepository.findByIds(ids);
+      } catch (error) {
+          throw new RpcException({
+              message: error.message,
+              status: HttpStatus.BAD_REQUEST,
+          });
+      }
+  }
+
 }

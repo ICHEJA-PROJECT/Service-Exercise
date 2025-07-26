@@ -1,7 +1,6 @@
 import { HttpStatus, Injectable } from '@nestjs/common';
 import { TopicI } from 'src/topics/domain/entititesI/TopicI';
 import { TopicRepository } from 'src/topics/domain/repositories/TopicRepository';
-import { UnitEntity } from '../entities/unit.entity';
 import { In, Repository } from 'typeorm';
 import { TopicEntity } from '../entities/topic.entity';
 import { CreateTopicDto } from '../dtos/create-topic.dto';
@@ -12,27 +11,14 @@ import { RpcException } from '@nestjs/microservices';
 export class TopicRepositoryImpl implements TopicRepository {
   constructor(
     @InjectRepository(TopicEntity)
-    private readonly topicRepository: Repository<TopicEntity>,
-    @InjectRepository(UnitEntity)
-    private readonly unitRepository: Repository<UnitEntity>,
+    private readonly topicRepository: Repository<TopicEntity>
   ) {}
 
   async create(createTopic: CreateTopicDto): Promise<TopicI> {
     try {
-      const unit = await this.unitRepository.findOne({
-        where: { id: createTopic.unit_id },
-      });
-
-      if (!unit) {
-        throw new RpcException({
-          status: HttpStatus.NOT_FOUND,
-          message: 'La unidad no existe.',
-        });
-      }
 
       const topicCreated = this.topicRepository.create({
-        name: createTopic.name,
-        unit: unit,
+        name: createTopic.name
       });
 
       return await this.topicRepository.save(topicCreated);

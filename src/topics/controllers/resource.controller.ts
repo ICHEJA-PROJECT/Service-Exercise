@@ -18,15 +18,15 @@ export class ResourceController {
   @MessagePattern({
     cmd: EXERCISE_SERVICE_OPTIONS.EXERCISE_RESOURCE_FIND_BY_PUPIL,
   })
-  async getByPupil(@Payload() id: number) {
-    return await this.resourceService.findByPupil(id);
+  async getByPupil(@Payload() { id, learningPathId }: { id: number, learningPathId: number}) {
+    return await this.resourceService.findByPupil(id, learningPathId);
   }
 
   @MessagePattern({
     cmd: EXERCISE_SERVICE_OPTIONS.EXERCISE_RESOURCE_FIND_BY_TOPIC,
   })
-  async getByTopic(@Payload() id: number) {
-    return await this.resourceService.findByTopic(id);
+  async getByTopic(@Payload() { id, learningPathId }: { id: number, learningPathId: number}) {
+    return await this.resourceService.findByTopic(id, learningPathId);
   }
 
   @MessagePattern({

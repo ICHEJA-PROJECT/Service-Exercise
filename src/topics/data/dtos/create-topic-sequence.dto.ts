@@ -8,4 +8,7 @@ export class CreateTopicSequenceDto {
     @ApiProperty({description: "id of next topic", type: "number"})
     @IsNumber()
     nextTopicId: number;
+    @ApiProperty({description: "id of learning path", type: "number"})
+    @IsNumber()
+    learningPathId: number;
 }

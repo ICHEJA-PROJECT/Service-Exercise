@@ -16,8 +16,8 @@ export class TopicController {
   @MessagePattern({
     cmd: EXERCISE_SERVICE_OPTIONS.EXERCISE_TOPIC_FIND_BY_PUPIL,
   })
-  async getTopicsByPupil(@Payload() id: number) {
-    return await this.topicService.findByPupil(id);
+  async getTopicsByPupil(@Payload() { id, learningPathId }: { id: number, learningPathId: number }) {
+    return await this.topicService.findByPupil(id, learningPathId);
   }
 
   @MessagePattern({
@@ -30,7 +30,7 @@ export class TopicController {
   @MessagePattern({
     cmd: EXERCISE_SERVICE_OPTIONS.EXERCISE_TOPIC_FIND_BY_ID,
   })
-  async getTopic(@Payload() id: number) {
-    return await this.topicService.findOne(id);
+  async getTopic(@Payload() { id, learningPathId }: { id: number, learningPathId: number}) {
+    return await this.topicService.findOne(id, learningPathId);
   }
 }

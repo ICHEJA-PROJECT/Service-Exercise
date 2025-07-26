@@ -24,12 +24,23 @@ export class ExerciseController {
   }
 
   @MessagePattern({ cmd: EXERCISE_SERVICE_OPTIONS.EXERCISE_FIND_BY_PUPIL_ID })
-  async findByPupil(@Payload() id: number) {
-    return await this.exerciseService.findByPupil(id);
+  async findByPupil(@Payload() { id, learningPathId }: { id: number, learningPathId: number }) {
+    return await this.exerciseService.findByPupil(id, learningPathId);
   }
 
   @MessagePattern({ cmd: EXERCISE_SERVICE_OPTIONS.EXERCISE_FIND_BY_ID })
   async findOne(@Payload() id: number) {
     return await this.exerciseService.findOne(id);
   }
+
+  @MessagePattern({ cmd: EXERCISE_SERVICE_OPTIONS.EXERCISE_PERCENTAGES_BY_ID })
+  async getPorcentages(@Payload() id: number) {
+    return await this.exerciseService.getPorcentages(id);
+  }
+
+  @MessagePattern({ cmd: EXERCISE_SERVICE_OPTIONS.EXERCISE_RANDOM_FIND_BY_TEMPLATE })
+  async getRandomByTemplate(@Payload() id: number) {
+    return await this.exerciseService.getRandomByTemplate(id);
+  }
+  
 }

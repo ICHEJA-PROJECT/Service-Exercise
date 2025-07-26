@@ -3,7 +3,7 @@ import { ExerciseRepository } from 'src/exercises/domain/repositories/ExerciseRe
 import { CreateExerciseDto } from '../dtos/create-exercise.dto';
 import { HttpStatus, Injectable } from '@nestjs/common';
 import { ExerciseEntity } from '../entities/exercise.entity';
-import { Repository } from 'typeorm';
+import { In, Repository } from 'typeorm';
 import { TemplateEntity } from 'src/templates/data/entities/template.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { RpcException } from '@nestjs/microservices';
@@ -70,8 +70,8 @@ export class ExerciseRepositoryImpl implements ExerciseRepository {
   async findByTemplate(idTemplate: number): Promise<ExerciseI[]> {
     try {
       const exercises = await this.exerciseRepository.find({
-        where: { template: { id: idTemplate } },
-        select: { template: { skills: true } },
+        where: { template: { id: idTemplate } }, 
+        relations: { template: { layout: true }},
       });
       return exercises;
     } catch (error) {
@@ -145,4 +145,50 @@ export class ExerciseRepositoryImpl implements ExerciseRepository {
       });
     }
   }
+
+  async getPorcentages(id: number): Promise<any> {
+    try {
+      
+      const result = await this.exerciseRepository
+        .createQueryBuilder('e')
+        .select([
+          'ts.skillId AS skillId',
+          'ts.porcentage AS percentage'
+            ])
+            .innerJoin('e.template', 't')        
+            .innerJoin('t.skills', 'ts')
+            .where('e.id = :id', { id })
+            .getRawMany();
+
+        return result;
+    } catch (error) {
+        throw new RpcException({
+            message: error.message,
+            status: HttpStatus.BAD_REQUEST
+        });
+    }
+  }
+
+  async findByIds(ids: number[]): Promise<ExerciseI[]> {
+        try {
+            return await this.exerciseRepository.find({where:{id: In(ids)}, relations: {template: {layout: true}}});
+        } catch (error) {
+            throw new RpcException({
+                message: error.message,
+                status: HttpStatus.BAD_REQUEST,
+            });
+        }
+    }
+
+    async findByTemplatesOnlyIds(templatesIds: number[]): Promise<number[]> {
+        try {
+            return await this.exerciseRepository.find({where:{template: {id: In(templatesIds)}}})
+                .then(exercises => exercises.map(exercise => exercise.id));
+        } catch (error) {
+            throw new RpcException({
+                message: error.message,
+                status: HttpStatus.BAD_REQUEST,
+            });
+        }
+    }
 }

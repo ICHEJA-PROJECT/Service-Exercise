@@ -9,6 +9,8 @@ import { TemplateSkillService } from 'src/templates/services/template_skill.serv
 import { catchError, firstValueFrom } from 'rxjs';
 import { ClientProxy, RpcException } from '@nestjs/microservices';
 import { RECORD_SERVICE_OPTIONS } from 'src/shared/constants/record_service_options';
+import { PREFERENCES_SERVICE_OPTIONS } from 'src/shared/constants/preferences_service_options';
+import { filterGroups } from 'src/shared/utils/filter-groups';
 
 @Injectable()
 export class ExerciseService {
@@ -21,6 +23,8 @@ export class ExerciseService {
     private readonly templateSkillService: TemplateSkillService,
     @Inject(RECORD_SERVICE_OPTIONS.RECORD_SERVICE_NAME)
     private readonly client: ClientProxy,
+    @Inject(PREFERENCES_SERVICE_OPTIONS.PREFERENCES_SERVICE_NAME)
+    private readonly preferencesClient: ClientProxy
   ) {}
 
   async create(createExerciseDto: CreateExerciseDto) {
@@ -35,9 +39,9 @@ export class ExerciseService {
     }
   }
 
-  async findByPupil(id: number) {
+  async findByPupil(id: number, learningPathId: number) {
     try {
-      const topics = await this.topicService.findByPupil(id);
+      const topics = await this.topicService.findByPupil(id, learningPathId);
 
       const topicIds = topics.map((topic) => topic.id);
 
@@ -45,8 +49,31 @@ export class ExerciseService {
 
       const templateIds = templates.map((template) => template.id);
 
+      const templatesImpairmentsIds = await firstValueFrom(
+        this.preferencesClient
+        .send(
+          { cmd: PREFERENCES_SERVICE_OPTIONS.REACTIVE_IMPAIRMENT_FIND_BY_LEARNING_PATH
+
+          }, 
+          {
+            id: learningPathId
+          }
+        )
+        .pipe(catchError(error => {
+          throw new RpcException({
+            message: error.message,
+            status: HttpStatus.BAD_REQUEST,
+          });
+        }))
+      );
+
+      console.log('Ids de los ejercicios realizados por el estudiante.')
+      console.log(templatesImpairmentsIds);
+
+      const templatesIdsFiltered = filterGroups(templateIds, templatesImpairmentsIds);
+
       const templateSkills =
-        await this.templateSkillService.findManyByTemplates(templateIds);
+        await this.templateSkillService.findManyByTemplates(templatesIdsFiltered);
 
       const skills = await this.skillService.findByTemplates(templateIds);
 
@@ -55,7 +82,7 @@ export class ExerciseService {
       const skillIdsString = skillIds.join(',');
 
       // Aquí realizar consulta al servicio que contenga Educando-Historial
-      const pupilExercisesResponse = await firstValueFrom(
+      const pupilExerciseIds = await firstValueFrom(
         this.client
           .send(
             { cmd: RECORD_SERVICE_OPTIONS.PUPIL_EXERCISE_FIND_BY_PUPILS_IDS },
@@ -75,16 +102,20 @@ export class ExerciseService {
           ),
       );
 
-      const pupilExerciseIds = pupilExercisesResponse.data;
+      console.log('Ids de los ejercicios realizados por el estudiante.')
+      console.log(pupilExerciseIds);
 
-      const countExercisesByTemplate =
-        await this.exerciseRepository.countExercisesByTemplate(
-          pupilExerciseIds,
-        );
+    let countExercisesByTemplate = []
+      if(!pupilExerciseIds) {
+        countExercisesByTemplate =
+          await this.exerciseRepository.countExercisesByTemplate(
+            pupilExerciseIds,
+          );
+      }
 
       // Aquí realizar consulta al servicio que contenga Educando-Estadisticas
 
-      const pupilGradesResponse = await firstValueFrom(
+      const grades = await firstValueFrom(
         this.client
           .send(
             { cmd: RECORD_SERVICE_OPTIONS.PUPIL_SKILL_FIND_GRADE_BY_SKILLS },
@@ -109,7 +140,9 @@ export class ExerciseService {
           ),
       );
 
-      const grades = pupilGradesResponse.data;
+      console.log('Calificaciones del estudiante.')
+      console.log(grades);
+
 
       // Al servicio de AG, le enviaré templates, conteo, calificaciones
       /*
@@ -123,7 +156,17 @@ export class ExerciseService {
       // Conteo: Consultar al servicio educando_ejercicios para traer que ejercicios a hecho;
       // Calificaciones: Consultar al caso de uso del educando_ejercicio_habilidades Parametros(skills);
 
-      return [];
+
+      // La siguiente en implementación es una simulación de lo que procede al utilizar el AG
+      let bestTemplates = templates;
+
+      if(templateIds.length > 3) {
+        bestTemplates = templates.slice(0, 3);
+      }
+
+      const listTemplates = bestTemplates.map((bestTemplate) =>  {return { id: bestTemplate.id, title: bestTemplate.title}});
+
+      return listTemplates;
     } catch (error) {
       throw new RpcException({
         status: HttpStatus.BAD_REQUEST,
@@ -168,6 +211,49 @@ export class ExerciseService {
         status: HttpStatus.BAD_REQUEST,
         message:
           error.message || 'Error fetching exercise percentage by ID and skill',
+      });
+    }
+  }
+
+  async getPorcentages(id: number) {
+    try {
+      const porcentages = await this.exerciseRepository.getPorcentages(id);
+      return porcentages;
+    } catch (error) {
+      throw new RpcException({
+        status: HttpStatus.BAD_REQUEST,
+        message: error.message,
+      });
+    }
+  }
+
+  async getRandomByTemplate(templateId: number) {
+    try {
+      const exercises = await this.exerciseRepository.findByTemplate(templateId);
+      const array = Array.from({ length: exercises.length }, (_, i) => i);
+      const exerciseRandomIndex = array[Math.floor(Math.random() * array.length)];
+      const exercise = exercises[exerciseRandomIndex];
+
+      return {
+        id: exercise.id,
+        context: exercise.context,
+        layout: exercise.template.layout.name
+      }
+    } catch (error) {
+      throw new RpcException({
+        status: HttpStatus.BAD_REQUEST,
+        message: error.message,
+      });
+    }
+  }
+
+  async countExercisesByTemplate(pupilExerciseIds: number[]) {
+    try {
+      return await this.exerciseRepository.countExercisesByTemplate(pupilExerciseIds);
+    } catch (error) {
+      throw new RpcException({
+        status: HttpStatus.BAD_REQUEST,
+        message: error.message,
       });
     }
   }

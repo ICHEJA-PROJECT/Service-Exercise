@@ -8,6 +8,7 @@ import { ExerciseService } from './services/exercise.service';
 import { TopicModule } from 'src/topics/topic.module';
 import { TemplateModule } from 'src/templates/template.module';
 import { ExercisesRecordTransport } from 'src/shared/transports/exercises-record.transport';
+import { PreferencesTransport } from 'src/shared/transports/preferences.transport';
 
 @Module({
   imports: [
@@ -15,8 +16,10 @@ import { ExercisesRecordTransport } from 'src/shared/transports/exercises-record
     TopicModule,
     TemplateModule,
     ExercisesRecordTransport,
+    PreferencesTransport,
   ],
   providers: [ExerciseRepositoryImpl, ExerciseService],
   controllers: [ExerciseController],
+  exports: []
 })
 export class ExerciseModule {}
