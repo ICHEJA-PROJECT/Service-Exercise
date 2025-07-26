@@ -237,7 +237,12 @@ export class ExerciseService {
       return {
         id: exercise.id,
         context: exercise.context,
-        layout: exercise.template.layout.name
+        layout: exercise.template.layout.name,
+        instructions: exercise.template.instructions,
+        instructionsMedia: { 
+          type: exercise.template.instructionMedias[0].typeMedia.name,
+          media_path: exercise.template.instructionMedias[0].pathMedia
+        }
       }
     } catch (error) {
       throw new RpcException({

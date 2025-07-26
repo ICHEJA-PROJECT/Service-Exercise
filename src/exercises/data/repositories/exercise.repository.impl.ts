@@ -71,7 +71,7 @@ export class ExerciseRepositoryImpl implements ExerciseRepository {
     try {
       const exercises = await this.exerciseRepository.find({
         where: { template: { id: idTemplate } }, 
-        relations: { template: { layout: true }},
+        relations: { template: { layout: true, instructionMedias: {typeMedia: true} }},
       });
       return exercises;
     } catch (error) {
