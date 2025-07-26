@@ -45,11 +45,11 @@ export class TopicService {
       const templatesImpairmentsRes = await firstValueFrom(
         this.preferencesClient
           .send(
-            { cmd: PREFERENCES_SERVICE_OPTIONS.RESOURCE_IMPAIRMENT_FIND_BY_LEARNING_PATH }, 
+            { cmd: PREFERENCES_SERVICE_OPTIONS.REACTIVE_IMPAIRMENT_FIND_BY_LEARNING_PATH }, 
             { id: learningPathId }
           )
       );
-      const templatesImpairmentsIds = templatesImpairmentsRes.data;
+      const templatesImpairmentsIds = templatesImpairmentsRes;
       const templatesIdsFiltered = filterGroups(templateIds, templatesImpairmentsIds);
       const templates = await this.templateService.findByIds(templatesIdsFiltered);
       topic.templates = templates;
@@ -84,7 +84,7 @@ export class TopicService {
           ),
       );
 
-      const completedTopics = pupilTopicsResponse.data;
+      const completedTopics = pupilTopicsResponse;
 
       // Aquí implementar lógica de grafo dirigido para encontrar temas permitidos.
       const idTopics = await this.getAvaibleTopicsUseCase.run(completedTopics, learningPathId);

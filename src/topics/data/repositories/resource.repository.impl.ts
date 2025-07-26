@@ -47,7 +47,7 @@ export class ResourceRepositoryImpl implements ResourceRepository {
 
   async findOne(id: number): Promise<ResourceI> {
     try {
-      const resource = await this.resourceRepository.findOne({ where: { id } });
+      const resource = await this.resourceRepository.findOne({ where: { id }, relations: { layout: true } });
       if (!resource) {
         throw new RpcException({
           status: HttpStatus.BAD_REQUEST,
@@ -106,7 +106,7 @@ export class ResourceRepositoryImpl implements ResourceRepository {
 
   async findByIds(ids: number[]): Promise<ResourceI[]> {
       try {
-          return await this.resourceRepository.find({where:{id: In(ids)}, relations: {layout: true}});
+          return await this.resourceRepository.find({where:{id: In(ids)}, select: {id: true, title: true}});
       } catch (error) {
           throw new RpcException({
               message: error.message,

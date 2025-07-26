@@ -20,5 +20,6 @@ import { PreferencesTransport } from 'src/shared/transports/preferences.transpor
   ],
   providers: [ExerciseRepositoryImpl, ExerciseService],
   controllers: [ExerciseController],
+  exports: []
 })
 export class ExerciseModule {}
