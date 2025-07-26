@@ -70,8 +70,8 @@ export class ExerciseRepositoryImpl implements ExerciseRepository {
   async findByTemplate(idTemplate: number): Promise<ExerciseI[]> {
     try {
       const exercises = await this.exerciseRepository.find({
-        where: { template: { id: idTemplate } },
-        select: { template: { skills: true } },
+        where: { template: { id: idTemplate } }, 
+        relations: { template: { layout: true }},
       });
       return exercises;
     } catch (error) {

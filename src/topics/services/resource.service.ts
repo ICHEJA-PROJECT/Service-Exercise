@@ -46,7 +46,12 @@ export class ResourceService {
   async findOne(id: number) {
     try {
       const resource = await this.resourceRepository.findOne(id);
-      return resource;
+      return {
+        id: resource.id,
+        title: resource.title,
+        layout: resource.layout.name,
+        content: resource.content
+      };
     } catch (error) {
       throw new RpcException({
         status: HttpStatus.BAD_REQUEST,
@@ -57,7 +62,6 @@ export class ResourceService {
 
   async findByPupil(pupilId: number, learningPathId: number): Promise<ResourceI[]> {
     try {
-      console.log(`id pupil: ${pupilId}`);
       const topics = await this.topicService.findByPupil(pupilId, learningPathId);
       const topicIds = topics.map((topic) => topic.id);
       const resources = await this.resourceRepository.findByTopics(topicIds);
@@ -77,7 +81,7 @@ export class ResourceService {
             });
           }))
       );
-      const resourcesImpairmentsIds = resourcesImpairmentsRes.data;
+      const resourcesImpairmentsIds = resourcesImpairmentsRes;
       const resourcesIdsFiltered = filterGroups(resourcesIds, resourcesImpairmentsIds);
       const resourcesFiltered = await this.findByIds(resourcesIdsFiltered);
 
@@ -109,7 +113,7 @@ export class ResourceService {
           }))
       );
 
-      const resourcesImpairmentsIds = resourcesImpairmentRes.data;
+      const resourcesImpairmentsIds = resourcesImpairmentRes;
 
       const resourcesIdsFiltered = filterGroups(resourcesIds, resourcesImpairmentsIds);
 

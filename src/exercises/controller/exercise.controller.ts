@@ -37,5 +37,10 @@ export class ExerciseController {
   async getPorcentages(@Payload() id: number) {
     return await this.exerciseService.getPorcentages(id);
   }
+
+  @MessagePattern({ cmd: EXERCISE_SERVICE_OPTIONS.EXERCISE_RANDOM_FIND_BY_TEMPLATE })
+  async getRandomByTemplate(@Payload() id: number) {
+    return await this.exerciseService.getRandomByTemplate(id);
+  }
   
 }
