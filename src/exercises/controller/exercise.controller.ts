@@ -43,4 +43,8 @@ export class ExerciseController {
     return await this.exerciseService.getRandomByTemplate(id);
   }
   
+  @MessagePattern(({ cmd: EXERCISE_SERVICE_OPTIONS.EXERCISE_FIND_BY_IDS }))
+  async getByIds(@Payload() ids: number[]) {
+    return await this.exerciseService.findByIds(ids);
+  }
 }

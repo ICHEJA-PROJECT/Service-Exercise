@@ -48,7 +48,7 @@ export class ExerciseRepositoryImpl implements ExerciseRepository {
     try {
       const exercise = await this.exerciseRepository.findOne({
         where: { id },
-        relations: { template: { skills: true } },
+        relations: { template: { skills: true, layout: true, instructionMedias: true}},
       });
 
       if (!exercise) {
