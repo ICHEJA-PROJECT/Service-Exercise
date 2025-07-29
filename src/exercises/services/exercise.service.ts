@@ -164,9 +164,20 @@ export class ExerciseService {
         bestTemplates = templates.slice(0, 3);
       }
 
-      const listTemplates = bestTemplates.map((bestTemplate) =>  {return { id: bestTemplate.id, title: bestTemplate.title}});
+      const listTemplates = bestTemplates.map((bestTemplate) =>  {return { id: bestTemplate.id, title: bestTemplate.title, time: bestTemplate.suggestTime}});
 
-      return listTemplates;
+      let exercises = await Promise.all(
+        listTemplates.map(async (template) => {
+          let exercise = await this.getRandomByTemplate(template.id)
+          return {
+            ...template,
+            exerciseId: exercise.id,
+            byTeacher: false,
+          }
+        })
+      );
+
+      return exercises;
     } catch (error) {
       throw new RpcException({
         status: HttpStatus.BAD_REQUEST,
@@ -178,7 +189,14 @@ export class ExerciseService {
   async findOne(id: number) {
     try {
       const exercise = await this.exerciseRepository.findOne(id);
-      return exercise;
+      return {
+        id: exercise.id,
+        context: exercise.context,
+        layout: exercise.template.layout.name,
+        instructions: exercise.template.instructions,
+        instructionsMedia: exercise.template.instructionMedias[0],
+        suggestTime: exercise.template.suggestTime,
+      };
     } catch (error) {
       throw new RpcException({
         status: HttpStatus.BAD_REQUEST,
@@ -239,6 +257,7 @@ export class ExerciseService {
         context: exercise.context,
         layout: exercise.template.layout.name,
         instructions: exercise.template.instructions,
+        time: exercise.template.suggestTime,
         instructionsMedia: { 
           type: exercise.template.instructionMedias[0].typeMedia.name,
           media_path: exercise.template.instructionMedias[0].pathMedia
@@ -255,6 +274,17 @@ export class ExerciseService {
   async countExercisesByTemplate(pupilExerciseIds: number[]) {
     try {
       return await this.exerciseRepository.countExercisesByTemplate(pupilExerciseIds);
+    } catch (error) {
+      throw new RpcException({
+        status: HttpStatus.BAD_REQUEST,
+        message: error.message,
+      });
+    }
+  }
+
+  async findByIds(ids: number[]) {
+    try {
+      return await this.exerciseRepository.findByIds(ids);
     } catch (error) {
       throw new RpcException({
         status: HttpStatus.BAD_REQUEST,

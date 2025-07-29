@@ -38,7 +38,7 @@ export class TopicService {
     }
   }
 
-  async findOne(id: number, learningPathId: number): Promise<TopicI> {
+  async findOne(id: number, learningPathId: number) {
     try {
       const topic = await this._topicRepository.findOne(id);
       const templateIds = topic.templates.map(template => template.id);
@@ -51,9 +51,14 @@ export class TopicService {
       );
       const templatesImpairmentsIds = templatesImpairmentsRes;
       const templatesIdsFiltered = filterGroups(templateIds, templatesImpairmentsIds);
-      const templates = await this.templateService.findByIds(templatesIdsFiltered);
-      topic.templates = templates;
-      return topic;
+      const templatesSaved = await this.templateService.findByIds(templatesIdsFiltered);
+      const templates = templatesSaved.map(template => { return { id: template.id, title: template.title, time: template.suggestTime, byTeacher: false}});
+      
+      return {
+        id: topic.id,
+        name: topic.name,
+        templates: templates
+      }
     } catch (error) {
       throw new RpcException({
         status: HttpStatus.BAD_REQUEST,
