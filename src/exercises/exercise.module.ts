@@ -9,6 +9,8 @@ import { TopicModule } from 'src/topics/topic.module';
 import { TemplateModule } from 'src/templates/template.module';
 import { ExercisesRecordTransport } from 'src/shared/transports/exercises-record.transport';
 import { PreferencesTransport } from 'src/shared/transports/preferences.transport';
+import { GetPersonalizedExerciseUseCase } from './domain/usecases/GetPersonalizedExerciseUseCase';
+import { UsersTransport } from 'src/shared/transports/users.transport';
 
 @Module({
   imports: [
@@ -17,8 +19,9 @@ import { PreferencesTransport } from 'src/shared/transports/preferences.transpor
     TemplateModule,
     ExercisesRecordTransport,
     PreferencesTransport,
+    UsersTransport,
   ],
-  providers: [ExerciseRepositoryImpl, ExerciseService],
+  providers: [ExerciseRepositoryImpl, GetPersonalizedExerciseUseCase, ExerciseService],
   controllers: [ExerciseController],
   exports: []
 })

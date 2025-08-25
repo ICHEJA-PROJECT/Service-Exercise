@@ -8,6 +8,9 @@ import { LearningPathEntity } from "./learning_path.entity";
 
 @Entity('secuencia_temas')
 export class TopicSequenceEntity implements TopicSequenceI {
+    @PrimaryColumn({ name: 'id_ruta_aprendizaje', type: 'int', nullable: false})
+    learningPathId: number;
+
     @PrimaryColumn({ name: "id_tema", type: "int", nullable: false})
     currentTopicId: number;
 

@@ -48,7 +48,7 @@ export class ExerciseRepositoryImpl implements ExerciseRepository {
     try {
       const exercise = await this.exerciseRepository.findOne({
         where: { id },
-        relations: { template: { skills: true, layout: true, instructionMedias: true}},
+        relations: { template: { skills: true, layout: true, instructionMedias: true, topic: true}},
       });
 
       if (!exercise) {
@@ -71,7 +71,7 @@ export class ExerciseRepositoryImpl implements ExerciseRepository {
     try {
       const exercises = await this.exerciseRepository.find({
         where: { template: { id: idTemplate } }, 
-        relations: { template: { layout: true, instructionMedias: {typeMedia: true} }},
+        relations: { template: { layout: true, instructionMedias: {typeMedia: true}, topic: true }},
       });
       return exercises;
     } catch (error) {

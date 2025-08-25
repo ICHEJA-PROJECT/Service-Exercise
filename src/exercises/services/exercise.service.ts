@@ -11,6 +11,7 @@ import { ClientProxy, RpcException } from '@nestjs/microservices';
 import { RECORD_SERVICE_OPTIONS } from 'src/shared/constants/record_service_options';
 import { PREFERENCES_SERVICE_OPTIONS } from 'src/shared/constants/preferences_service_options';
 import { filterGroups } from 'src/shared/utils/filter-groups';
+import { GetPersonalizedExerciseUseCase } from '../domain/usecases/GetPersonalizedExerciseUseCase';
 
 @Injectable()
 export class ExerciseService {
@@ -24,7 +25,8 @@ export class ExerciseService {
     @Inject(RECORD_SERVICE_OPTIONS.RECORD_SERVICE_NAME)
     private readonly client: ClientProxy,
     @Inject(PREFERENCES_SERVICE_OPTIONS.PREFERENCES_SERVICE_NAME)
-    private readonly preferencesClient: ClientProxy
+    private readonly preferencesClient: ClientProxy,
+    private readonly getPersonalizedExerciseUseCase: GetPersonalizedExerciseUseCase,
   ) {}
 
   async create(createExerciseDto: CreateExerciseDto) {
@@ -168,7 +170,7 @@ export class ExerciseService {
 
       let exercises = await Promise.all(
         listTemplates.map(async (template) => {
-          let exercise = await this.getRandomByTemplate(template.id)
+          let exercise = await this.getRandomByTemplate(template.id, id);
           return {
             ...template,
             exerciseId: exercise.id,
@@ -186,12 +188,16 @@ export class ExerciseService {
     }
   }
 
-  async findOne(id: number) {
+  async findOne(id: number, pupilId: number) {
     try {
+
       const exercise = await this.exerciseRepository.findOne(id);
+
+      const context = await this.getPersonalizedExerciseUseCase.run(exercise, pupilId);
+      
       return {
         id: exercise.id,
-        context: exercise.context,
+        context: context,
         layout: exercise.template.layout.name,
         instructions: exercise.template.instructions,
         instructionsMedia: exercise.template.instructionMedias[0],
@@ -245,16 +251,20 @@ export class ExerciseService {
     }
   }
 
-  async getRandomByTemplate(templateId: number) {
+  async getRandomByTemplate(templateId: number, pupilId: number) {
     try {
       const exercises = await this.exerciseRepository.findByTemplate(templateId);
       const array = Array.from({ length: exercises.length }, (_, i) => i);
       const exerciseRandomIndex = array[Math.floor(Math.random() * array.length)];
       const exercise = exercises[exerciseRandomIndex];
 
+      const context = await this.getPersonalizedExerciseUseCase.run(exercise, pupilId);
+
+      console.log(context);
+
       return {
         id: exercise.id,
-        context: exercise.context,
+        context: context,
         layout: exercise.template.layout.name,
         instructions: exercise.template.instructions,
         time: exercise.template.suggestTime,
